@@ -1,13 +1,16 @@
-package AppleSaga;
+package com.model;
 
 public class Payment {
 	private int paymentId;
 	private double paymentAmount;
+	private String paymentMethod;
 	
 	public Payment() {
-		
+		this.paymentId = 0;
+		this.paymentAmount = 0;
+		this.paymentMethod = "";
 	}
-
+	
 	public int getPaymentId() {
 		return paymentId;
 	}
@@ -23,6 +26,13 @@ public class Payment {
 	public void setPaymentAmount(double paymentAmount) {
 		this.paymentAmount = paymentAmount;
 	}
-	
+
+	public String getPaymentMethod() {
+		return paymentMethod;
+	}
+
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
 	
 }
