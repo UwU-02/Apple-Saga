@@ -1,4 +1,4 @@
-package AppleSaga;
+package com.model;
 
 public class Receipt {
 	private String receiptId;
@@ -6,9 +6,16 @@ public class Receipt {
 	private Product product;
 	
 	public Receipt() {
-		
+		this.receiptId = "";
+		this.paymentAmount = 0;
 	}
 
+	public Receipt(String receiptId, double paymentAmount, Product product) {
+		this.receiptId = receiptId;
+		this.paymentAmount = paymentAmount;
+		this.product = product;
+	}
+	
 	public String getReceiptId() {
 		return receiptId;
 	}
