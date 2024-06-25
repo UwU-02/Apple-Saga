@@ -7,7 +7,7 @@ public class ShoppingCart {
 	private ShoppingOrder orderId;
 	
 	public ShoppingCart() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public int getProductQuantity() {
