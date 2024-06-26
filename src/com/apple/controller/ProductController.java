@@ -23,22 +23,24 @@ public class ProductController extends Controller {
 	}
 
 	// get 1 product by id
-    public Product getProductDetailsbyId(String productId)
+    public Product getProductDetailsbyId(int productId)
     {
         Product product = new Product();
         try
         {
             String sql = "SELECT * FROM product WHERE productId = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, productId);
+            ps.setInt(1, productId);
             ResultSet rs = ps.executeQuery();
             while(rs.next())
             {
                 product.setProductId(rs.getInt("productId"));
                 product.setProductName(rs.getString("name"));
                 product.setProductPrice(rs.getDouble("price"));
-                product.setProductQuantity(rs.getInt("productQuantity"));
-                product.setProductCategory(new ProductCategoryController().getProductCategoryById(rs.getString("categoryId_fk")));
+                product.setProductStockQuantity(rs.getInt("stockQuantity"));
+                product.setProductColor(rs.getString("productColor"));
+                product.setProductImageURL(rs.getString("imageURL"));
+                product.setProductCategory(new ProductCategoryController().getProductCategoryById(rs.getInt("categoryId_fk")));
             }
         } catch (SQLException err)
         {
@@ -62,8 +64,10 @@ public class ProductController extends Controller {
                 product.setProductId(rs.getInt("productId"));
                 product.setProductName(rs.getString("name"));
                 product.setProductPrice(rs.getDouble("price"));
-                product.setProductQuantity(rs.getInt("productQuantity"));
-                product.setProductCategory(new ProductCategoryController().getProductCategoryById(rs.getString("categoryId_fk")));
+                product.setProductStockQuantity(rs.getInt("stockQuantity"));
+                product.setProductColor(rs.getString("productColor"));
+                product.setProductImageURL(rs.getString("imageURL"));
+                product.setProductCategory(new ProductCategoryController().getProductCategoryById(rs.getInt("categoryId_fk")));
                
                 products.add(product);
             }
@@ -74,15 +78,47 @@ public class ProductController extends Controller {
         return products;
     }
     
+    //get products by category
+    public List<Product> getAllProductByCategory(String categoryName)
+    {
+    	List<Product> products = new ArrayList<>();
+    	try {
+    		
+    		String sql = "SELECT p.* FROM product p JOIN product_category pc ON p.categoryId_fk = pc.categoryId WHERE pc.categoryName = ?";
+        	PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, categoryName);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                Product product = new Product();
+                product.setProductId(rs.getInt("p.productId"));
+                product.setProductName(rs.getString("p.productName"));
+                product.setProductPrice(rs.getDouble("p.productPrice"));
+                product.setProductStockQuantity(rs.getInt("p.stockQuantity"));
+                product.setProductColor(rs.getString("p.productColor"));
+                product.setProductImageURL(rs.getString("p.imageURL"));
+                product.setProductCategory(new ProductCategoryController().getProductCategoryById(rs.getInt("p.category_id_fk")));
+                
+                products.add(product);
+            }
+    	}catch (SQLException err)
+    	{
+            System.out.println(err.getMessage());
+        }
+        return products;
+    	
+        
+    }
+    
   //get stock quantity
-    public int getProductStockQuantity(String productId)
+    public int getProductStockQuantity(int productId)
     {
         int stockQuantity = 0;
         try
         {
             String sql = "SELECT stockQuantity FROM product WHERE productId = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, productId);
+            ps.setInt(1, productId);
             ResultSet rs = ps.executeQuery();
             while(rs.next())
             {
