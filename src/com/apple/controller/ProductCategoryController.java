@@ -25,14 +25,14 @@ public class ProductCategoryController extends Controller {
 	}
 	
 	// get product category by id
-	public ProductCategory getProductCategoryById(String categoryId) {
+	public ProductCategory getProductCategoryById(int categoryId) {
 		
 		ProductCategory productCategory = new ProductCategory();
 		try
         {
             String sql = "SELECT * FROM product_category WHERE categoryId = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, categoryId);
+            ps.setInt(1, categoryId);
             ResultSet rs = ps.executeQuery();
             while(rs.next())
             {
