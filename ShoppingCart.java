@@ -1,37 +1,37 @@
-package model;
+package com.apple.model;
+
+import java.util.List;
 
 public class ShoppingCart {
 	
-	private int productQuantity;
-	private Product productId;
-	private ShoppingOrder orderId;
+	private int cartId;
+	private List<CartItem> cartItems;
+
+	public ShoppingCart(int cartId,List<CartItem> cartItems ) {
+		
+		this.cartId = cartId;
+		this.cartItems = cartItems;
+	}
 	
 	public ShoppingCart() {
-		
+		this.cartId = 0;
+		this.cartItems = null;
 	}
 
-	public int getProductQuantity() {
-		return productQuantity;
+	public int getCartId() {
+		return cartId;
 	}
 
-	public void setProductQuantity(int productQuantity) {
-		this.productQuantity = productQuantity;
+	public void setCartId(int cartId) {
+		this.cartId = cartId;
 	}
 
-	public Product getProductId() {
-		return productId;
+	public List<CartItem> getCartItems() {
+		return cartItems;
 	}
 
-	public void setProductId(Product productId) {
-		this.productId = productId;
+	public void setCartItems(List<CartItem> cartItems) {
+		this.cartItems = cartItems;
 	}
-
-	public ShoppingOrder getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(ShoppingOrder orderId) {
-		this.orderId = orderId;
-	}
-
+	
 }
