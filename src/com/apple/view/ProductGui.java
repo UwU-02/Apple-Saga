@@ -1,6 +1,9 @@
 package view;
 
 import javax.swing.*;
+
+import model.Product;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,8 +46,8 @@ public class ProductGui {
         frame.getContentPane().add(txtSearch);
         txtSearch.setColumns(10);
 
-      
-        ImageIcon imageIcon1 = new ImageIcon("productImages/Iphone 13.jpeg");
+        Product product = new Product();
+        ImageIcon imageIcon1 = new ImageIcon(product.getProductImageURL());
         JLabel productImage1 = new JLabel(imageIcon1);
         productImage1.setBounds(92, 161, 150, 117);
         frame.getContentPane().add(productImage1);
@@ -54,7 +57,7 @@ public class ProductGui {
         lblIphone13.setBounds(92, 288, 100, 21);
         frame.getContentPane().add(lblIphone13);
 
-        ImageIcon imageIcon2 = new ImageIcon("productImages/Iphone 14.jpeg");
+        ImageIcon imageIcon2 = new ImageIcon(product.getProductImageURL());
         JLabel productImage2 = new JLabel(imageIcon2);
         productImage2.setBounds(282, 161, 150, 117);
         frame.getContentPane().add(productImage2);
@@ -64,7 +67,7 @@ public class ProductGui {
         lblIphone14.setBounds(282, 288, 100, 21);
         frame.getContentPane().add(lblIphone14);
 
-        ImageIcon imageIcon3 = new ImageIcon("productImages/Iphone 15.jpeg");
+        ImageIcon imageIcon3 = new ImageIcon(product.getProductImageURL());
         JLabel productImage3 = new JLabel(imageIcon3);
         productImage3.setBounds(467, 161, 150, 117);
         frame.getContentPane().add(productImage3);
@@ -74,7 +77,7 @@ public class ProductGui {
         lblIphone15.setBounds(467, 288, 100, 21);
         frame.getContentPane().add(lblIphone15);
 
-        ImageIcon imageIcon4 = new ImageIcon("productImages/Ipad Air 11-inch.jpeg");
+        ImageIcon imageIcon4 = new ImageIcon(product.getProductImageURL());
         JLabel productImage4 = new JLabel(imageIcon4);
         productImage4.setIcon(imageIcon4);
         productImage4.setBounds(658, 161, 150, 117);
@@ -85,7 +88,7 @@ public class ProductGui {
         lblIpadAirinchi.setBounds(658, 288, 130, 21);
         frame.getContentPane().add(lblIpadAirinchi);
 
-        ImageIcon imageIcon5 = new ImageIcon("productImages/Ipad Pro.jpeg");
+        ImageIcon imageIcon5 = new ImageIcon(product.getProductImageURL());
         JLabel productImage5 = new JLabel(imageIcon5);
         productImage5.setBounds(91, 354, 150, 117);
         frame.getContentPane().add(productImage5);
@@ -95,7 +98,7 @@ public class ProductGui {
         lblIpadPro.setBounds(91, 481, 100, 21);
         frame.getContentPane().add(lblIpadPro);
 
-        ImageIcon imageIcon6 = new ImageIcon("productImages/Airpods Pro.jpeg");
+        ImageIcon imageIcon6 = new ImageIcon(product.getProductImageURL());
         JLabel productImage6 = new JLabel(imageIcon6);
         productImage6.setBounds(282, 354, 150, 117);
         frame.getContentPane().add(productImage6);
@@ -105,7 +108,7 @@ public class ProductGui {
         lblAirpodsPro.setBounds(282, 481, 100, 21);
         frame.getContentPane().add(lblAirpodsPro);
 
-        ImageIcon imageIcon7 = new ImageIcon("productImages/Airpods (3rd Gen).jpeg");
+        ImageIcon imageIcon7 = new ImageIcon(product.getProductImageURL());
         JLabel productImage7 = new JLabel(imageIcon7);
         productImage7.setBounds(467, 354, 150, 117);
         frame.getContentPane().add(productImage7);
@@ -115,7 +118,7 @@ public class ProductGui {
         lblAirpods.setBounds(467, 481, 130, 21);
         frame.getContentPane().add(lblAirpods);
 
-        ImageIcon imageIcon8 = new ImageIcon("productImages/Apple Watch Series 9.jpeg");
+        ImageIcon imageIcon8 = new ImageIcon(product.getProductImageURL());
         JLabel productImage8 = new JLabel(imageIcon8);
         productImage8.setBounds(658, 354, 150, 117);
         frame.getContentPane().add(productImage8);
@@ -176,3 +179,4 @@ public class ProductGui {
         });
     }
 }
+
