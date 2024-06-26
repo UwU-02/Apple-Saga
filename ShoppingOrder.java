@@ -1,52 +1,85 @@
-package model;
+package com.apple.model;
+
+import java.util.List;
 
 public class ShoppingOrder {
-    private String orderId;
-    private String orderDate;
-    private Customer customerId;
-    
-    public ShoppingOrder() {
-        this.orderId = "";
-        this.orderDate = "";
-        this.customerId = new Customer();
-    }
-    
-    
-    public ShoppingOrder(String orderId, String orderDate, Customer customer) {
-        this.orderId = orderId;
-        this.orderDate = orderDate;
-        this.customerId = customerId;
-    }
-    
-    
-    public String getOrderId() {
-        return orderId;
-    }
-    
-   
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-    
+	private int orderId;
+	private boolean deliveryStatus;
+	private double total;
+	private Customer customer;
+	private List<CartItem> cartItems;
+	
+	public ShoppingOrder(int orderId,boolean deliveryStatus, double total, Customer customer, List<CartItem> cartItems) {
+	
+		this.orderId = orderId;
+		this.deliveryStatus = false;
+		this.total = total;
+		this.customer = customer;
+		this.cartItems = cartItems;
 
-    public String getOrderDate() {
-        return orderDate;
-    }
-    
-   
-    public void setOrderDate(String orderDate) {
-        this.orderDate = orderDate;
-    }
-    
-    
-    public Customer getCustomer() {
-        return customerId;
-    }
-    
-  
-    public void setCustomer(Customer customer) {
-        this.customerId = customerId;
-    }
-    
-   
+	}
+	
+	public ShoppingOrder() {
+		
+		this.orderId = 0;
+		this.deliveryStatus = false;
+		this.total = 0.0;
+		this.cartItems = null;
+	}
+
+	public int getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(int orderId) {
+		this.orderId = orderId;
+	}
+
+	public boolean isDeliveryStatus() {
+		return deliveryStatus;
+	}
+
+	public void setDeliveryStatus(boolean deliveryStatus) {
+		this.deliveryStatus = deliveryStatus;
+	}
+
+	public double getOrderTotal() {
+		return total;
+	}
+
+	public void setOrderTotal(double total) {
+		this.total = total;
+	}
+
+	public Customer getOrderCustomer() {
+		return customer;
+	}
+
+	public void setOrderCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
+	public List<CartItem> getCartItems() {
+		return cartItems;
+	}
+
+	public void setCartItems(List<CartItem> cartItems) {
+		this.cartItems = cartItems;
+	}
+	
+	public void addCartItem(CartItem cartItem) {
+	        this.cartItems.add(cartItem);
+	}
+
+	public void removeCartItem(CartItem cartItem) {
+	        this.cartItems.remove(cartItem);
+	}
+
+	public void clearCartItems() {
+	        this.cartItems.clear();
+	}
+	
+	
+	
 }
+
