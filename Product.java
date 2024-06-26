@@ -78,11 +78,11 @@ public class Product {
 		this.productColor = productColor;
 	}
 
-	public String getImageURL() {
+	public String getProductImageURL() {
 		return imageURL;
 	}
 
-	public void setImageURL(String imageURL) {
+	public void setProductImageURL(String imageURL) {
 		this.imageURL = imageURL;
 	}
 
