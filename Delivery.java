@@ -1,4 +1,4 @@
-package AppleSaga;
+package com.apple.model;
 
 public class Delivery {
 	
