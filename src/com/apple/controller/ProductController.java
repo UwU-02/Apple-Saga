@@ -83,7 +83,7 @@ public class ProductController extends Controller {
     {
     	List<Product> products = new ArrayList<>();
     	try {
-    		
+    		//
     		String sql = "SELECT p.* FROM product p JOIN product_category pc ON p.categoryId_fk = pc.categoryId WHERE pc.categoryName = ?";
         	PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, categoryName);
