@@ -2,24 +2,24 @@ package com.apple.model;
 
 public class ProductCategory {
 
-	private String categoryId;
+	private int categoryId;
 	private String categoryName;
 	
-	public ProductCategory(String categoryId, String categoryName) {
+	public ProductCategory(int categoryId, String categoryName) {
 		this.categoryId = categoryId;
 		this.categoryName = categoryName;
 	}
 	
 	public ProductCategory() {
-		this.categoryId = "";
+		this.categoryId = 0;
 		this.categoryName = "";
 	}
 
-	public String getCategoryId() {
+	public int getCategoryId() {
 		return categoryId;
 	}
 
-	public void setCategoryId(String categoryId) {
+	public void setCategoryId(int categoryId) {
 		this.categoryId = categoryId;
 	}
 
@@ -32,3 +32,4 @@ public class ProductCategory {
 	}
 
 }
+
