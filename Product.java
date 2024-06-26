@@ -2,33 +2,39 @@ package com.apple.model;
 
 public class Product {
 	
-	private String productId;
+	private int productId;
 	private String productName;
+	private String productColor;
 	private int productQuantity;
 	private double productPrice;
 	private ProductCategory productCategory;
+	private String imageURL;
 	
 	public Product() {
-		this.productId = "";
+		this.productId = 0;
 		this.productName = "";
+		this.productColor = "";
 		this.productQuantity = 0;
 		this.productPrice = 0.0;
 		this.productCategory = new ProductCategory();
+		this.imageURL = "";
 	}
 
-	public Product(String productId, String productName, int productQuantity,double productPrice,ProductCategory productCategory ) {
+	public Product(int productId, String productName,String productColor, int productQuantity,double productPrice,ProductCategory productCategory, String imageURL ) {
 		this.productId = productId;
 		this.productName = productName;
+		this.productColor = productColor;
 		this.productQuantity = productQuantity;
 		this.productPrice = productPrice;
 		this.productCategory = productCategory;
+		this.imageURL = imageURL;
 	}
 
-	public String getProductId() {
+	public int getProductId() {
 		return productId;
 	}
 
-	public void setProductId(String productId) {
+	public void setProductId(int productId) {
 		this.productId = productId;
 	}
 
@@ -62,6 +68,22 @@ public class Product {
 
 	public void setProductCategory(ProductCategory productCategory) {
 		this.productCategory = productCategory;
+	}
+
+	public String getProductColor() {
+		return productColor;
+	}
+
+	public void setProductColor(String productColor) {
+		this.productColor = productColor;
+	}
+
+	public String getImageURL() {
+		return imageURL;
+	}
+
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
 	}
 
 }
