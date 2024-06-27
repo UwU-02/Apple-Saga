@@ -46,6 +46,7 @@ CREATE TABLE PRODUCT
    productColour VARCHAR(15),
    stockQuantity INT(5),
    categoryId INT(5),
+   imageURL VARCHAR(150)
    PRIMARY KEY (productId),
    FOREIGN KEY (categoryId) REFERENCES PRODUCT_CATEGORY (categoryId)
 );
