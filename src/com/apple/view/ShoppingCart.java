@@ -90,7 +90,7 @@ public class ShoppingCart {
 
     public static void main(String[] args) {
         // Create sample products
-        List<Product> products = List.of(
+     List<Product> products = List.of(
         //    new Product("Iphone 13", "path/to/image1.jpg", 3199.00),
        //     new Product("Iphone 14", "path/to/image2.jpg", 4299.00),
        //     new Product("Iphone 15", "path/to/image3.jpg", 5699.00),
