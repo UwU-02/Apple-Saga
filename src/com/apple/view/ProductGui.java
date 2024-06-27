@@ -14,7 +14,7 @@ public class ProductGui {
 
     public ProductGui() {
         frame = new JFrame();
-        frame.setBounds(100, 100, 960, 600);
+        frame.setBounds(100, 100, 1180, 690);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
 
@@ -30,19 +30,19 @@ public class ProductGui {
         frame.getContentPane().add(lblProduct);
 
         JButton filterBttn = new JButton("FILTER");
-        filterBttn.setBounds(712, 95, 85, 21);
+        filterBttn.setBounds(943, 94, 85, 21);
         frame.getContentPane().add(filterBttn);
 
         filterBttn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose(); // Close the current frame
-                new FilterGui(); // Open the filter page
+                new FilterGui(null); // Open the filter page
             }
         });
 
         txtSearch = new JTextField();
         txtSearch.setText("SEARCH");
-        txtSearch.setBounds(526, 96, 150, 19);
+        txtSearch.setBounds(757, 95, 150, 19);
         frame.getContentPane().add(txtSearch);
         txtSearch.setColumns(10);
 
@@ -127,7 +127,29 @@ public class ProductGui {
         lblAppleWatchSeries9.setFont(new Font("Serif", Font.PLAIN, 14));
         lblAppleWatchSeries9.setBounds(658, 481, 180, 21);
         frame.getContentPane().add(lblAppleWatchSeries9);
-
+        
+        ImageIcon imageIcon9 = new ImageIcon(product.getProductImageURL());
+        JLabel productImage9 = new JLabel(imageIcon9);
+        productImage9.setBounds(880, 161, 150, 117);
+        frame.getContentPane().add(productImage9);
+        
+        JLabel lblIpadProInch = new JLabel("Ipad Pro 12.9-inch");
+        lblIpadProInch.setFont(new Font("Serif", Font.PLAIN, 14));
+        lblIpadProInch.setBounds(880, 288, 130, 21);
+        frame.getContentPane().add(lblIpadProInch);
+        
+        
+        JLabel lblAppleWatchSe = new JLabel("Apple Watch SE");
+        lblAppleWatchSe.setFont(new Font("Serif", Font.PLAIN, 14));
+        lblAppleWatchSe.setBounds(880, 481, 180, 21);
+        frame.getContentPane().add(lblAppleWatchSe);
+        
+        ImageIcon imageIcon10 = new ImageIcon(product.getProductImageURL());
+        JLabel productImage10 = new JLabel(imageIcon10);
+        productImage10.setBounds(880, 354, 150, 117);
+        frame.getContentPane().add(productImage10);
+        
+        
         JLabel lblPrice1 = new JLabel("RM 3199");
         lblPrice1.setFont(new Font("Serif", Font.PLAIN, 12));
         lblPrice1.setBounds(92, 321, 63, 21);
@@ -167,6 +189,18 @@ public class ProductGui {
         lblPrice5.setFont(new Font("Serif", Font.PLAIN, 12));
         lblPrice5.setBounds(91, 512, 63, 21);
         frame.getContentPane().add(lblPrice5);
+        
+      
+        JLabel lblRm9 = new JLabel("RM 5299");
+        lblRm9.setFont(new Font("Serif", Font.PLAIN, 12));
+        lblRm9.setBounds(880, 319, 63, 21);
+        frame.getContentPane().add(lblRm9);
+
+        
+        JLabel lblRm10 = new JLabel("RM 1199");
+        lblRm10.setFont(new Font("Serif", Font.PLAIN, 12));
+        lblRm10.setBounds(880, 512, 63, 21);
+        frame.getContentPane().add(lblRm10);
 
         frame.setVisible(true);
     }
@@ -179,4 +213,3 @@ public class ProductGui {
         });
     }
 }
-
