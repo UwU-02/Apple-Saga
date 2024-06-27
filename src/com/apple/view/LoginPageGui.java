@@ -20,7 +20,7 @@ import javax.swing.UIManager;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class LoginPage extends JFrame {
+public class LoginPageGui extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -34,7 +34,7 @@ public class LoginPage extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					LoginPage frame = new LoginPage();
+					LoginPageGui frame = new LoginPageGui();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -46,7 +46,7 @@ public class LoginPage extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public LoginPage() {
+	public LoginPageGui() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 960, 600);
 		contentPane = new JPanel();
@@ -94,7 +94,7 @@ public class LoginPage extends JFrame {
 		buttonSignUp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				Register frame = new Register();
+				RegisterGui frame = new RegisterGui();
 				frame.setVisible(true);
 				
 			}
