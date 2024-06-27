@@ -24,7 +24,7 @@ public class LoginPage extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField;
+	private JTextField textFieldEmail;
 	private JPasswordField passwordField;
 
 	/**
@@ -71,10 +71,10 @@ public class LoginPage extends JFrame {
 		lblNewLabel_2.setBounds(174, 193, 105, 24);
 		contentPane.add(lblNewLabel_2);
 		
-		textField = new JTextField();
-		textField.setBounds(174, 227, 556, 33);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		textFieldEmail = new JTextField();
+		textFieldEmail.setBounds(174, 227, 556, 33);
+		contentPane.add(textFieldEmail);
+		textFieldEmail.setColumns(10);
 		
 		JLabel lblNewLabel_3 = new JLabel("Password : ");
 		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -90,18 +90,27 @@ public class LoginPage extends JFrame {
 		lblNewLabel_4.setBounds(174, 359, 167, 22);
 		contentPane.add(lblNewLabel_4);
 		
-		JToggleButton tglbtnNewToggleButton = new JToggleButton("Sign up here");
-		tglbtnNewToggleButton.setBackground(UIManager.getColor("Button.darkShadow"));
-		tglbtnNewToggleButton.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		tglbtnNewToggleButton.setBounds(340, 362, 132, 21);
-		contentPane.add(tglbtnNewToggleButton);
+		JToggleButton buttonSignUp = new JToggleButton("Sign up here");
+		buttonSignUp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				Register frame = new Register();
+				frame.setVisible(true);
+				
+			}
+		});
+		buttonSignUp.setBackground(UIManager.getColor("Button.darkShadow"));
+		buttonSignUp.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		buttonSignUp.setBounds(340, 362, 132, 21);
+		contentPane.add(buttonSignUp);
 		
 		JButton btnNewButton = new JButton("Login");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				String email = customerEmail.getText();
-			    String password = customerPassword.getText();
+				//fix this code for database
+				String email = textFieldEmail.getText();
+			    String password = passwordField.getText();
 				if (email.equals("Austin")&&(password.equals("1234"))) {
 					JOptionPane.showMessageDialog(null,  "Login Successful");
 				}
