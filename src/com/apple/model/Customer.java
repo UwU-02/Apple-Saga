@@ -9,7 +9,17 @@ public class Customer {
 	private String customerPassword;
 	private ShoppingCart shoppingCart;
 	private List<ShoppingOrder> shoppingOrders;
-	
+
+	public Customer() {
+		this.customerId = 0;
+		this.customerName = "";
+		this.customerContact = "";
+		this.customerAddress = "";
+		this.customerEmail = "";
+		this.customerPassword = "";
+		this.shoppingCart = new ShoppingCart();
+		this.shoppingOrders = (List<ShoppingOrder>) new ShoppingOrder();
+	}
 	
 	public Customer(int customerId, String customerName, String customerContact, String customerAddress,
 			String customerEmail, String customerPassword, ShoppingCart shoppingCart,
