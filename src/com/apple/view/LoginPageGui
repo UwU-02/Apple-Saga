@@ -1,7 +1,6 @@
 package view;
 
-import com.apple.model.Customer;
-
+import com.apple.controller.CustomerController;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -47,9 +46,11 @@ public class LoginPageGui extends JFrame {
 	 * Create the frame.
 	 */
 	public LoginPageGui() {
-                CustomerController.connectToDatabase();
-
-                 //frame setting 
+		
+		CustomerController customerController = new CustomerController();
+		customerController.connectToDatabase();
+		
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 960, 600);
 		contentPane = new JPanel();
