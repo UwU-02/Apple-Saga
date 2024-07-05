@@ -1,5 +1,7 @@
 package view;
 
+import com.apple.model.Customer;
+import com.apple.controller.CustomerController;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
