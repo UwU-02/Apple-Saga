@@ -5,29 +5,44 @@ public class Address{
 	private String road;
 	private int postcode;
 	private String state;
-	private int tel;
 	
-	public Address(int number,String road,int postcode,String state,int tel){
+	public Address(int number, String road, int postcode, String state){
 		this.number=number;
 		this.road=road;
 		this.postcode=postcode;
 		this.state=state;
-		this.tel=tel;
 	}
 	
 	public int getNumber(){
 		return number;
 	}
+	
 	public String getRoad(){
 		return road;
 	}
+	
 	public int getPostcode(){
 		return postcode;
 	}
+	
 	public String getState(){
 		return state;
 	}
-	public int getTel(){
-		return tel;
+	
+	public void setNumber(int number) {
+		this.number = number;
 	}
+
+	public void setRoad(String road) {
+		this.road = road;
+	}
+
+	public void setPostcode(int postcode) {
+		this.postcode = postcode;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+	
 }
