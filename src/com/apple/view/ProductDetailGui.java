@@ -58,22 +58,22 @@ public class ProductDetailGui extends JFrame {
 		lblNewLabel_1.setBounds(50, 184, 45, 13);
 		contentPane.add(lblNewLabel_1);
 		
-		JLabel lblNewLabel_2 = new JLabel("Item");
+		JLabel lblNewLabel_2 = new JLabel("Airpods Pro");
 		lblNewLabel_2.setFont(new Font("Segoe UI", Font.BOLD, 14));
 		lblNewLabel_2.setBounds(406, 141, 137, 22);
 		contentPane.add(lblNewLabel_2);
 		
-		JLabel lblNewLabel_2_1 = new JLabel("price");
+		JLabel lblNewLabel_2_1 = new JLabel("RM 999");
 		lblNewLabel_2_1.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		lblNewLabel_2_1.setBounds(406, 173, 137, 22);
 		contentPane.add(lblNewLabel_2_1);
 		
-		JLabel lblNewLabel_2_2 = new JLabel("colour");
+		JLabel lblNewLabel_2_2 = new JLabel("White");
 		lblNewLabel_2_2.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		lblNewLabel_2_2.setBounds(406, 194, 137, 22);
 		contentPane.add(lblNewLabel_2_2);
 		
-		JLabel lblNewLabel_2_3 = new JLabel("stock");
+		JLabel lblNewLabel_2_3 = new JLabel("Stock : 10");
 		lblNewLabel_2_3.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		lblNewLabel_2_3.setBounds(406, 215, 137, 22);
 		contentPane.add(lblNewLabel_2_3);
