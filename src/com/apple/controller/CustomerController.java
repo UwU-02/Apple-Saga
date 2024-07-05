@@ -61,15 +61,16 @@ public class CustomerController extends Controller{
 
     public void addCustomer(Customer customer) {
         try {
-        	connectToDatabase(); // add to connect
-            String sql = "INSERT INTO CUSTOMER (customerName, customerEmail, customerContact, customerAddress, customerPassword) VALUES (?, ?, ?, ?, ?);";
+            connectToDatabase(); 
+            String sql = "INSERT INTO CUSTOMER (customerName, customerContact, customerAddress, customerEmail, customerPassword) VALUES (?,?,?,?,?);";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, customer.getCustomerName());
-            ps.setString(2, customer.getCustomerEmail());
-            ps.setString(3, customer.getCustomerContact());
-            ps.setString(4, customer.getCustomerAddress());
+            ps.setString(2, customer.getCustomerContact());
+            ps.setString(3, customer.getCustomerAddress());
+            ps.setString(4, customer.getCustomerEmail());
             ps.setString(5, customer.getCustomerPassword());
             ps.executeUpdate();
+            conn.commit(); // Commit the changes
         } catch (SQLException err) {
             System.out.println(err.getMessage());
         }
@@ -123,4 +124,3 @@ public class CustomerController extends Controller{
         return result;
     }
 }
-
