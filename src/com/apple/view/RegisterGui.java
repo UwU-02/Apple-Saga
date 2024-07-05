@@ -165,10 +165,11 @@ public class RegisterGui extends JFrame {
 	        // register if match pwd
 			Customer newCustomer = new Customer(
 				textFieldName.getText().trim(),
-				textFieldEmail.getText().trim(),
 				textFieldPhoneNumber.getText().trim(),
-				new String(password),
-				textFieldAddress.getText().trim());
+				textFieldAddress.getText().trim(),
+				textFieldEmail.getText().trim(),
+				new String(password));
+				
 			
 			System.out.println(newCustomer);
 			customerController.addCustomer(newCustomer);
@@ -209,4 +210,3 @@ public class RegisterGui extends JFrame {
 		contentPane.add(passwordField);
 	}
 }
-
