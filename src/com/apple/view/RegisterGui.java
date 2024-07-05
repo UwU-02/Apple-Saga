@@ -43,6 +43,16 @@ public class RegisterGui extends JFrame {
 		});
 	}
 	
+	private boolean isValidEmail(String email) {
+	    String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+	    return email.matches(emailRegex);
+	}
+
+	private boolean isValidPhoneNumber(String phoneNumber) {
+	    String phoneRegex = "^(601[02-46-9]\\d{7}|601[1]\\d{8})$";
+	    return phoneNumber.matches(phoneRegex);
+	}
+	
 	/**
 	 * Create the frame.
 	 */
@@ -144,6 +154,26 @@ public class RegisterGui extends JFrame {
 		            JOptionPane.showMessageDialog(RegisterGui.this,
 		                "Please fill in all fields.",
 		                "Incomplete Information",
+		                JOptionPane.WARNING_MESSAGE);
+		            return;
+		        }
+		        
+		     // Validate email
+		        String email = textFieldEmail.getText().trim();
+		        if (!isValidEmail(email)) {
+		            JOptionPane.showMessageDialog(RegisterGui.this,
+		                "Please enter a valid email address (XX@mail.com). ",
+		                "Invalid Email",
+		                JOptionPane.WARNING_MESSAGE);
+		            return;
+		        }
+
+		        // Validate phone number
+		        String phoneNumber = textFieldPhoneNumber.getText().trim();
+		        if (!isValidPhoneNumber(phoneNumber)) {
+		            JOptionPane.showMessageDialog(RegisterGui.this,
+		                "Please enter a valid phone number (601XXXXXXXX or 6011XXXXXXXX).",
+		                "Invalid Phone Number",
 		                JOptionPane.WARNING_MESSAGE);
 		            return;
 		        }
