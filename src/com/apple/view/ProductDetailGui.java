@@ -57,6 +57,16 @@ public class ProductDetailGui extends JFrame {
 		JLabel lblNewLabel_1 = new JLabel("Image");
 		lblNewLabel_1.setBounds(50, 184, 45, 13);
 		contentPane.add(lblNewLabel_1);
+
+		ImageIcon imageIcon = new ImageIcon(product.getProductImageURL());
+        JButton productImage = new JButton(imageIcon);
+        productImage.setBounds(282, 161, 150, 117);
+        frame.getContentPane().add(productImage);
+        productImage.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+              //  new ProductDetailGui(productId); // Open the product details page 
+            }
+        });
 		
 		JLabel lblNewLabel_2 = new JLabel("Airpods Pro");
 		lblNewLabel_2.setFont(new Font("Segoe UI", Font.BOLD, 14));
