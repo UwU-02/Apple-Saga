@@ -70,26 +70,31 @@ public class ReviewGui extends JFrame {
 		JLabel lblNewLabel_1 = new JLabel("Image");
 		lblNewLabel_1.setBounds(61, 207, 45, 13);
 		contentPane.add(lblNewLabel_1);
+
+		ImageIcon imageIcon = new ImageIcon(product.getProductImageURL());
+        JButton productImage = new JButton(imageIcon);
+        productImage.setBounds(282, 161, 150, 117);
+        frame.getContentPane().add(productImage);
+        productImage.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+              //  new ProductDetailGui(productId); // Open the product details page 
+            }
+        });
 		
-		JLabel lblNewLabel_2 = new JLabel("Item");
+		JLabel lblNewLabel_2 = new JLabel("Airpods Pro");
 		lblNewLabel_2.setFont(new Font("Segoe UI", Font.BOLD, 14));
 		lblNewLabel_2.setBounds(393, 152, 137, 22);
 		contentPane.add(lblNewLabel_2);
 		
-		JLabel lblNewLabel_2_1 = new JLabel("price");
+		JLabel lblNewLabel_2_1 = new JLabel("RM 999");
 		lblNewLabel_2_1.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		lblNewLabel_2_1.setBounds(393, 177, 137, 22);
 		contentPane.add(lblNewLabel_2_1);
 		
-		JLabel lblNewLabel_2_2 = new JLabel("colour");
+		JLabel lblNewLabel_2_2 = new JLabel("White");
 		lblNewLabel_2_2.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		lblNewLabel_2_2.setBounds(393, 198, 137, 22);
 		contentPane.add(lblNewLabel_2_2);
-		
-		JLabel lblNewLabel_2_3 = new JLabel("stock");
-		lblNewLabel_2_3.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		lblNewLabel_2_3.setBounds(393, 219, 137, 22);
-		contentPane.add(lblNewLabel_2_3);
 		
 		JLabel lblNewLabel_3 = new JLabel("pcs ");
 		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
