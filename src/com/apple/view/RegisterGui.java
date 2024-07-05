@@ -134,6 +134,12 @@ public class RegisterGui extends JFrame {
 		contentPane.add(lblNewLabel_4_1_1_1);
 		
 		JButton buttonSignUp = new JButton("Sign Up");
+		buttonSignUp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				
+			}
+		});
 		buttonSignUp.setFont(new Font("Times New Roman", Font.PLAIN, 16));
 		buttonSignUp.setBounds(822, 505, 91, 34);
 		contentPane.add(buttonSignUp);
