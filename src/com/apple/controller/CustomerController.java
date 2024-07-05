@@ -9,13 +9,13 @@ import java.sql.SQLException;
 import com.apple.model.Customer;
 
 public class CustomerController extends Controller{
-
-
     public void connectToDatabase() 
     {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/penpalsoop", "root", "");
+
+            //Class.forName("com.mysql.cj.jdbc.Driver"); 
+            Class.forName("com.mysql.jdbc.Driver");  
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/applesaga", "root", "");
         } catch (ClassNotFoundException | SQLException err) {
             System.out.println(err.getMessage());
         }
@@ -63,7 +63,8 @@ public class CustomerController extends Controller{
 
     public void addCustomer(Customer customer) {
         try {
-            String sql = "INSERT INTO CUSTOMER (customerName, customerEmail, customerContact, customerAddress, customerPassword) VALUES (?, ?, ?, ?, ?)";
+        	connectToDatabase(); // add to connect
+            String sql = "INSERT INTO CUSTOMER (customerName, customerEmail, customerContact, customerAddress, customerPassword) VALUES (?, ?, ?, ?, ?);";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, customer.getCustomerName());
             ps.setString(2, customer.getCustomerEmail());
