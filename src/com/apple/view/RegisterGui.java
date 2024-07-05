@@ -42,14 +42,7 @@ public class RegisterGui extends JFrame {
 			}
 		});
 	}
-	private void clearFields() {
-	    textFieldName.setText("");
-	    textFieldEmail.setText("");
-	    textFieldPhoneNumber.setText("");
-	    passwordField.setText("");
-	    confirmPasswordField.setText("");
-	    textFieldAddress.setText("");
-	}
+	
 	/**
 	 * Create the frame.
 	 */
@@ -139,7 +132,22 @@ public class RegisterGui extends JFrame {
 		buttonSignUp.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				//new
+			
+				// Check if any field is empty
+		        if (textFieldName.getText().trim().isEmpty() ||
+		            textFieldEmail.getText().trim().isEmpty() ||
+		            textFieldPhoneNumber.getText().trim().isEmpty() ||
+		            passwordField.getPassword().length == 0 ||
+		            confirmPasswordField.getPassword().length == 0 ||
+		            textFieldAddress.getText().trim().isEmpty()) {
+		            
+		            JOptionPane.showMessageDialog(RegisterGui.this,
+		                "Please fill in all fields.",
+		                "Incomplete Information",
+		                JOptionPane.WARNING_MESSAGE);
+		            return;
+		        }
+				
 			CustomerController customerController = new CustomerController();
 			
 			char[] password = passwordField.getPassword();
@@ -156,11 +164,11 @@ public class RegisterGui extends JFrame {
 	        
 	        // register if match pwd
 			Customer newCustomer = new Customer(
-				textFieldName.getText(),
-				textFieldEmail.getText(),
-				textFieldPhoneNumber.getText(),
+				textFieldName.getText().trim(),
+				textFieldEmail.getText().trim(),
+				textFieldPhoneNumber.getText().trim(),
 				new String(password),
-				textFieldAddress.getText());
+				textFieldAddress.getText().trim());
 			
 			System.out.println(newCustomer);
 			customerController.addCustomer(newCustomer);
@@ -170,9 +178,21 @@ public class RegisterGui extends JFrame {
 		            "Success",
 		            JOptionPane.INFORMATION_MESSAGE);
 		        
-		        // Clear the fields or close the window as needed
-		        clearFields();
-			}
+			// Close the RegisterGui
+	        dispose();
+	        
+	        // Open the LoginPageGui
+	        EventQueue.invokeLater(new Runnable() {
+	            public void run() {
+	                try {
+	                    LoginPageGui frame = new LoginPageGui();
+	                    frame.setVisible(true);
+	                } catch (Exception ex) {
+	                    ex.printStackTrace();
+	                }
+	            }
+	        });
+	    }
 		});
 		buttonSignUp.setFont(new Font("Times New Roman", Font.PLAIN, 16));
 		buttonSignUp.setBounds(822, 505, 91, 34);
@@ -189,3 +209,4 @@ public class RegisterGui extends JFrame {
 		contentPane.add(passwordField);
 	}
 }
+
