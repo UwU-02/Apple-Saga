@@ -134,7 +134,7 @@ public class LoginPageGui extends JFrame {
 		        // Basic email format validation
 		        if (!isValidEmail(customerEmail)) {
 		            JOptionPane.showMessageDialog(LoginPageGui.this, 
-		                "Please enter a valid email address.", 
+		                "Please enter a valid email address (XX@mail.com). ", 
 		                "Invalid Email", 
 		                JOptionPane.WARNING_MESSAGE);
 		            return;
@@ -174,4 +174,5 @@ public class LoginPageGui extends JFrame {
 		contentPane.add(btnNewButton);
 	}
 }
-	
+		
+		
