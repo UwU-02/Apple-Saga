@@ -1,4 +1,5 @@
-package com.apple.model;
+package model;
+import java.util.ArrayList;
 import java.util.List;
 public class Customer {
 	private int customerId;;
@@ -18,7 +19,18 @@ public class Customer {
 		this.customerEmail = "";
 		this.customerPassword = "";
 		this.shoppingCart = new ShoppingCart();
-		this.shoppingOrders = (List<ShoppingOrder>) new ShoppingOrder();
+		this.shoppingOrders = new ArrayList<>();
+	}
+	
+	//new
+	public Customer( String customerName, String customerContact, String customerAddress,
+			String customerEmail, String customerPassword) 
+	{
+		this.customerName = customerName;
+		this.customerContact = customerContact;
+		this.customerAddress = customerAddress;
+		this.customerEmail = customerEmail;
+		this.customerPassword = customerPassword;
 	}
 	
 	public Customer(int customerId, String customerName, String customerContact, String customerAddress,
