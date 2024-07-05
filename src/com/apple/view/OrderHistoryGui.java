@@ -84,7 +84,7 @@ public class OrderHistoryGui extends JFrame {
 		JButton buttonDetails = new JButton("Details ");
 		buttonDetails.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new ProductGui();
+				new ProductGui(productId);
 			
 			}
 		});
