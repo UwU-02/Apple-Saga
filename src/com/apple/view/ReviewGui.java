@@ -9,6 +9,8 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ReviewGui extends JFrame {
 
@@ -50,6 +52,12 @@ public class ReviewGui extends JFrame {
 		contentPane.add(lblNewLabel);
 		
 		JButton buttonBack = new JButton("Back");
+		buttonBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ProductDetailGui frame = new ProductDetailGui();
+				frame.setVisible(true);
+			}
+		});
 		buttonBack.setFont(new Font("Times New Roman", Font.PLAIN, 16));
 		buttonBack.setBounds(44, 70, 85, 34);
 		contentPane.add(buttonBack);
@@ -99,6 +107,12 @@ public class ReviewGui extends JFrame {
 		textField.setColumns(10);
 		
 		JButton buttonSubmit = new JButton("Submit");
+		buttonSubmit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ProductDetailGui frame = new ProductDetailGui();
+				frame.setVisible(true);
+			}
+		});
 		buttonSubmit.setFont(new Font("Times New Roman", Font.PLAIN, 16));
 		buttonSubmit.setBounds(802, 479, 110, 34);
 		contentPane.add(buttonSubmit);
