@@ -1,9 +1,10 @@
 package view;
 
-import com.apple.model.Customer;
-import com.apple.controller.CustomerController;
+import model.Customer;
+import controller.CustomerController;
 import java.awt.EventQueue;
-
+import javax.swing.JOptionPane;
+import java.util.Arrays;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -13,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JPasswordField;
 
 public class RegisterGui extends JFrame {
 
@@ -21,9 +23,9 @@ public class RegisterGui extends JFrame {
 	private JTextField textFieldName;
 	private JTextField textFieldEmail;
 	private JTextField textFieldPhoneNumber;
-	private JTextField textFieldPassword;
-	private JTextField textFieldConfirm;
 	private JTextField textFieldAddress;
+	private JPasswordField confirmPasswordField;
+	private JPasswordField passwordField;
 
 	/**
 	 * Launch the application.
@@ -40,7 +42,14 @@ public class RegisterGui extends JFrame {
 			}
 		});
 	}
-
+	private void clearFields() {
+	    textFieldName.setText("");
+	    textFieldEmail.setText("");
+	    textFieldPhoneNumber.setText("");
+	    passwordField.setText("");
+	    confirmPasswordField.setText("");
+	    textFieldAddress.setText("");
+	}
 	/**
 	 * Create the frame.
 	 */
@@ -103,27 +112,18 @@ public class RegisterGui extends JFrame {
 		textFieldPhoneNumber = new JTextField();
 		textFieldPhoneNumber.setBounds(199, 259, 544, 34);
 		contentPane.add(textFieldPhoneNumber);
-		textFieldPhoneNumber.setColumns(10);
-		
-		textFieldPassword = new JTextField();
-		textFieldPassword.setColumns(10);
-		textFieldPassword.setBounds(199, 335, 544, 30);
-		contentPane.add(textFieldPassword);
+		textFieldPhoneNumber.setColumns(10);	
 		
 		JLabel lblNewLabel_4_1 = new JLabel("Password : ");
 		lblNewLabel_4_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lblNewLabel_4_1.setBounds(199, 303, 167, 22);
 		contentPane.add(lblNewLabel_4_1);
 		
+		
 		JLabel lblNewLabel_4_1_1 = new JLabel("Confirm Password : ");
 		lblNewLabel_4_1_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lblNewLabel_4_1_1.setBounds(199, 375, 185, 22);
 		contentPane.add(lblNewLabel_4_1_1);
-		
-		textFieldConfirm = new JTextField();
-		textFieldConfirm.setColumns(10);
-		textFieldConfirm.setBounds(199, 407, 544, 30);
-		contentPane.add(textFieldConfirm);
 		
 		textFieldAddress = new JTextField();
 		textFieldAddress.setColumns(10);
@@ -137,13 +137,55 @@ public class RegisterGui extends JFrame {
 		
 		JButton buttonSignUp = new JButton("Sign Up");
 		buttonSignUp.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
-				
-				
+				//new
+			CustomerController customerController = new CustomerController();
+			
+			char[] password = passwordField.getPassword();
+		    char[] confirmPassword = confirmPasswordField.getPassword();
+		 // Check if passwords match
+	        if (!Arrays.equals(password, confirmPassword)) {
+	            // Passwords don't match, show an error message
+	            JOptionPane.showMessageDialog(RegisterGui.this,
+	                "Passwords do not match. Please try again.",
+	                "Password Mismatch",
+	                JOptionPane.ERROR_MESSAGE);
+	            return; // Exit the method without registering
+	        }
+	        
+	        // register if match pwd
+			Customer newCustomer = new Customer(
+				textFieldName.getText(),
+				textFieldEmail.getText(),
+				textFieldPhoneNumber.getText(),
+				new String(password),
+				textFieldAddress.getText());
+			
+			System.out.println(newCustomer);
+			customerController.addCustomer(newCustomer);
+			
+			JOptionPane.showMessageDialog(RegisterGui.this,
+		            "Registration successful!",
+		            "Success",
+		            JOptionPane.INFORMATION_MESSAGE);
+		        
+		        // Clear the fields or close the window as needed
+		        clearFields();
 			}
 		});
 		buttonSignUp.setFont(new Font("Times New Roman", Font.PLAIN, 16));
 		buttonSignUp.setBounds(822, 505, 91, 34);
 		contentPane.add(buttonSignUp);
+		
+		confirmPasswordField = new JPasswordField();
+		confirmPasswordField.setColumns(10);
+		confirmPasswordField.setBounds(199, 407, 544, 30);
+		contentPane.add(confirmPasswordField);
+		
+		passwordField = new JPasswordField();
+		passwordField.setColumns(10);
+		passwordField.setBounds(199, 335, 544, 30);
+		contentPane.add(passwordField);
 	}
 }
