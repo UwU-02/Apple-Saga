@@ -2,11 +2,15 @@ package view;
 
 import java.awt.EventQueue;
 
+import com.apple.model.Product;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
@@ -66,10 +70,12 @@ public class ProductDetailGui extends JFrame {
 		lblNewLabel_1.setBounds(50, 184, 45, 13);
 		contentPane.add(lblNewLabel_1);
 		
-		ImageIcon imageIcon = new ImageIcon(product.getProductImageURL());
+		Product product = new Product();
+		ImageIcon imageIcon = new ImageIcon(product .getProductImageURL());
         JButton productImage = new JButton(imageIcon);
         productImage.setBounds(282, 161, 150, 117);
-        frame.getContentPane().add(productImage);
+        JFrame frame = null;
+		frame.getContentPane().add(productImage);
         productImage.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
               //  new ProductGui(productId); // Open the product page 
@@ -91,7 +97,7 @@ public class ProductDetailGui extends JFrame {
 		lblNewLabel_2_2.setBounds(406, 194, 137, 22);
 		contentPane.add(lblNewLabel_2_2);
 		
-		JLabel lblNewLabel_2_3 = new JLabel("stock");
+		JLabel lblNewLabel_2_3 = new JLabel("Stock");
 		lblNewLabel_2_3.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		lblNewLabel_2_3.setBounds(406, 215, 137, 22);
 		contentPane.add(lblNewLabel_2_3);
