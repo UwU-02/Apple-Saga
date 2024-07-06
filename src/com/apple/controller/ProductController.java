@@ -1,4 +1,4 @@
-package com.apple.controller;
+package controller;
 
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,14 +7,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.apple.model.Product;
+import model.*;
 
 public class ProductController extends Controller {
 
 	@Override
 	public void connectToDatabase() {
 		try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("com.mysql.jdbc.Driver");  
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/applesaga", "root", "");
         } catch (ClassNotFoundException | SQLException err)
         {
@@ -35,12 +35,12 @@ public class ProductController extends Controller {
             while(rs.next())
             {
                 product.setProductId(rs.getInt("productId"));
-                product.setProductName(rs.getString("name"));
-                product.setProductPrice(rs.getDouble("price"));
+                product.setProductName(rs.getString("productName"));
+                product.setProductPrice(rs.getDouble("productPrice"));
                 product.setProductStockQuantity(rs.getInt("stockQuantity"));
-                product.setProductColor(rs.getString("productColor"));
+                product.setProductColor(rs.getString("productColour"));
                 product.setProductImageURL(rs.getString("imageURL"));
-                product.setProductCategory(new ProductCategoryController().getProductCategoryById(rs.getInt("categoryId_fk")));
+                product.setProductCategory(new ProductCategoryController().getProductCategoryById(rs.getInt("categoryId")));
             }
         } catch (SQLException err)
         {
@@ -50,31 +50,30 @@ public class ProductController extends Controller {
     }
 	
     // get all product details
-    public List<Product> getAllProduct()
-    {
+    public List<Product> getAllProduct() {
         List<Product> products = new ArrayList<>();
-        try
-        {
-            String sql = "SELECT * FROM product";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            while(rs.next())
-            {
+        String sql = "SELECT * FROM product";
+        
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
                 Product product = new Product();
                 product.setProductId(rs.getInt("productId"));
-                product.setProductName(rs.getString("name"));
-                product.setProductPrice(rs.getDouble("price"));
+                product.setProductName(rs.getString("productName"));
+                product.setProductPrice(rs.getDouble("productPrice"));
                 product.setProductStockQuantity(rs.getInt("stockQuantity"));
-                product.setProductColor(rs.getString("productColor"));
+                product.setProductColor(rs.getString("productColour"));
                 product.setProductImageURL(rs.getString("imageURL"));
-                product.setProductCategory(new ProductCategoryController().getProductCategoryById(rs.getInt("categoryId_fk")));
-               
+                product.setProductCategory(new ProductCategoryController().getProductCategoryById(rs.getInt("categoryId")));
+                
+                System.out.println("Product name: " + product.getProductName()); // Add this debug statement
                 products.add(product);
             }
-        } catch (SQLException err)
-        {
-            System.out.println(err.getMessage());
+        } catch (SQLException err) {
+            System.err.println("Error fetching products: " + err.getMessage());
         }
+        
         return products;
     }
     
@@ -84,7 +83,7 @@ public class ProductController extends Controller {
     	List<Product> products = new ArrayList<>();
     	try {
     		//
-    		String sql = "SELECT p.* FROM product p JOIN product_category pc ON p.categoryId_fk = pc.categoryId WHERE pc.categoryName = ?";
+    		String sql = "SELECT p.* FROM product p JOIN product_category pc ON p.categoryId = pc.categoryId WHERE pc.categoryName = ?";
         	PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, categoryName);
             ResultSet rs = ps.executeQuery();
@@ -97,7 +96,7 @@ public class ProductController extends Controller {
                 product.setProductStockQuantity(rs.getInt("p.stockQuantity"));
                 product.setProductColor(rs.getString("p.productColor"));
                 product.setProductImageURL(rs.getString("p.imageURL"));
-                product.setProductCategory(new ProductCategoryController().getProductCategoryById(rs.getInt("p.category_id_fk")));
+                product.setProductCategory(new ProductCategoryController().getProductCategoryById(rs.getInt("p.categoryId")));
                 
                 products.add(product);
             }
