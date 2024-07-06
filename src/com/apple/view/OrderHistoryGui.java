@@ -2,6 +2,9 @@ package view;
 
 import java.awt.EventQueue;
 
+import com.apple.model.Customer;
+import com.apple.model.ShoppingOrder;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -84,7 +87,7 @@ public class OrderHistoryGui extends JFrame {
 		JButton buttonDetails = new JButton("Details ");
 		buttonDetails.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new ProductGui(productId);
+				new ProductGui();
 			
 			}
 		});
