@@ -1,265 +1,125 @@
 package view;
 
-import javax.swing.*;
+import java.awt.Dimension;
+import java.awt.EventQueue;
 
-import model.Product;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
+import Controller.CustomerController;
+import model.Customer;
+
+import javax.swing.JLabel;
+import java.awt.Font;
+import java.awt.Image;
+
+import javax.swing.JButton;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.awt.event.ActionEvent;
 
-public class ProductGui {
-    private JFrame frame;
-    private JTextField txtSearch;
+public class ProfileGui extends JFrame {
 
-    public ProductGui() {
-        frame = new JFrame();
-        frame.setBounds(100, 100, 1180, 690);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().setLayout(null);
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JLabel showCustName;
+	private JLabel showCustEmail;
 
-        JLabel storeName = new JLabel("APPLE SAGA STORE ");
-        storeName.setFont(new Font("Microsoft New Tai Lue", Font.BOLD, 24));
-        storeName.setBounds(71, 39, 239, 45);
-        frame.getContentPane().add(storeName);
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ProfileGui frame = new ProfileGui("customerEmail", "customerPassword");
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
 
-        JLabel lblProduct = new JLabel("PRODUCTS");
-        lblProduct.setHorizontalAlignment(SwingConstants.LEFT);
-        lblProduct.setFont(new Font("Serif", Font.PLAIN, 20));
-        lblProduct.setBounds(71, 79, 254, 45);
-        frame.getContentPane().add(lblProduct);
+	/**
+	 * Create the frame.
+	 */
+	public ProfileGui(String email, String password) {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 960, 600);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-        JButton filterBttn = new JButton("FILTER");
-        filterBttn.setBounds(943, 94, 85, 21);
-        frame.getContentPane().add(filterBttn);
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("APPLE SAGA STORE ");
+		lblNewLabel.setFont(new Font("Microsoft New Tai Lue", Font.BOLD, 18));
+		lblNewLabel.setBounds(34, 31, 185, 22);
+		contentPane.add(lblNewLabel);
+		
+		JButton buttonLogout = new JButton("Logout");
+		buttonLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				LoginPageGui frame = new LoginPageGui();
+				frame.setVisible(true);
+			}
+		});
+		buttonLogout.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+		buttonLogout.setBounds(34, 57, 101, 34);
+		contentPane.add(buttonLogout);
+		
+		JLabel lblNewLabel_1 = new JLabel("Profile");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 32));
+		lblNewLabel_1.setBounds(414, 31, 135, 39);
+		contentPane.add(lblNewLabel_1);
+		
+		JButton buttonOrder = new JButton("Order History ");
+		buttonOrder.setFont(new Font("Microsoft New Tai Lue", Font.PLAIN, 18));
+		buttonOrder.setBounds(224, 316, 498, 61);
+		contentPane.add(buttonOrder);
+		
+		JButton buttonShopping = new JButton("Shopping Cart");
+		buttonShopping.setFont(new Font("Microsoft New Tai Lue", Font.PLAIN, 18));
+		buttonShopping.setBounds(225, 407, 497, 61);
+		contentPane.add(buttonShopping);
+		
+		showCustName = new JLabel("Username ");
+		showCustName.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		showCustName.setBounds(373, 213, 195, 34);
+		contentPane.add(showCustName);
+		
+		showCustEmail = new JLabel(" Email");
+		showCustEmail.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		showCustEmail.setBounds(373, 257, 195, 34);
+		contentPane.add(showCustEmail);
+		
+		JLabel lblNewLabel_3 = new JLabel("New label");
+        try {
+            Image image = ImageIO.read(new File("C:\\Users\\Manni\\Documents\\UNIVERSITY STUDY\\Y2S2 sub\\OOP SANUSI\\PROJECT APPLE\\photos\\profile.png"));
+            Image scaledImage = image.getScaledInstance(128, 128, Image.SCALE_SMOOTH);
+            lblNewLabel_3.setIcon(new ImageIcon(scaledImage));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        lblNewLabel_3.setPreferredSize(new Dimension(128, 128));
+        lblNewLabel_3.setBounds(402, 90, 128, 128);
+        contentPane.add(lblNewLabel_3);
+		
+		
+		CustomerController customerController = new CustomerController();
+        Customer customer = customerController.getCustomerDetailbyUsernamePassword(email, password);
 
-        filterBttn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                new FilterGui(); // Open the filter page
-            }
-        });
+        if (customer != null) {
+            showCustName.setText("USERNAME: " + customer.getCustomerName());
+            showCustEmail.setText("EMAIL: " + customer.getCustomerEmail());
+        }
+	}
 
-        txtSearch = new JTextField();
-        txtSearch.setText("SEARCH");
-        txtSearch.setBounds(757, 95, 150, 19);
-        frame.getContentPane().add(txtSearch);
-        txtSearch.setColumns(10);
-
-        Product product = new Product();
-        ImageIcon imageIcon1 = new ImageIcon(product.getProductImageURL());
-        JButton productImage1 = new JButton(imageIcon1);
-        productImage1.setBounds(92, 161, 149, 117);
-        frame.getContentPane().add(productImage1);
-        productImage1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-              //  new ProductDetailGui(productId); // Open the product details page 
-            }
-        });
-
-        JLabel lblIphone13 = new JLabel("Iphone 13");
-        lblIphone13.setFont(new Font("Serif", Font.PLAIN, 14));
-        lblIphone13.setBounds(92, 288, 100, 21);
-        frame.getContentPane().add(lblIphone13);
-
-        ImageIcon imageIcon2 = new ImageIcon(product.getProductImageURL());
-        JButton productImage2 = new JButton(imageIcon2);
-        productImage2.setBounds(282, 161, 150, 117);
-        frame.getContentPane().add(productImage2);
-        productImage2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-              //  new ProductDetailGui(productId); // Open the product details page 
-            }
-        });
-
-        
-        JLabel lblIphone14 = new JLabel("Iphone 14");
-        lblIphone14.setFont(new Font("Serif", Font.PLAIN, 14));
-        lblIphone14.setBounds(282, 288, 100, 21);
-        frame.getContentPane().add(lblIphone14);
-
-        ImageIcon imageIcon3 = new ImageIcon(product.getProductImageURL());
-        JButton productImage3 = new JButton(imageIcon3);
-        productImage3.setBounds(467, 161, 150, 117);
-        frame.getContentPane().add(productImage3);
-        productImage3.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-              //  new ProductDetailGui(productId); // Open the product details page 
-            }
-        });
-
-        JLabel lblIphone15 = new JLabel("Iphone 15");
-        lblIphone15.setFont(new Font("Serif", Font.PLAIN, 14));
-        lblIphone15.setBounds(467, 288, 100, 21);
-        frame.getContentPane().add(lblIphone15);
-
-        ImageIcon imageIcon4 = new ImageIcon(product.getProductImageURL());
-        JButton productImage4 = new JButton(imageIcon4);
-        productImage4.setIcon(imageIcon4);
-        productImage4.setBounds(658, 161, 150, 117);
-        frame.getContentPane().add(productImage4);
-        productImage4.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-              //  new ProductDetailGui(productId); // Open the product details page 
-            }
-        });
-
-        JLabel lblIpadAirinchi = new JLabel("Ipad Air 11-inch");
-        lblIpadAirinchi.setFont(new Font("Serif", Font.PLAIN, 14));
-        lblIpadAirinchi.setBounds(658, 288, 130, 21);
-        frame.getContentPane().add(lblIpadAirinchi);
-
-        ImageIcon imageIcon5 = new ImageIcon(product.getProductImageURL());
-        JButton productImage5 = new JButton(imageIcon5);
-        productImage5.setBounds(91, 354, 150, 117);
-        frame.getContentPane().add(productImage5);
-        productImage5.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-              //  new ProductDetailGui(productId); // Open the product details page 
-            }
-        });
-
-        JLabel lblIpadPro = new JLabel("Ipad Pro");
-        lblIpadPro.setFont(new Font("Serif", Font.PLAIN, 14));
-        lblIpadPro.setBounds(91, 481, 100, 21);
-        frame.getContentPane().add(lblIpadPro);
-
-        ImageIcon imageIcon6 = new ImageIcon(product.getProductImageURL());
-        JButton productImage6 = new JButton(imageIcon6);
-        productImage6.setBounds(282, 354, 150, 117);
-        frame.getContentPane().add(productImage6);
-        productImage6.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-              //  new ProductDetailGui(productId); // Open the product details page 
-            }
-        });
-
-        JLabel lblAirpodsPro = new JLabel("Airpods Pro");
-        lblAirpodsPro.setFont(new Font("Serif", Font.PLAIN, 14));
-        lblAirpodsPro.setBounds(282, 481, 100, 21);
-        frame.getContentPane().add(lblAirpodsPro);
-
-        ImageIcon imageIcon7 = new ImageIcon(product.getProductImageURL());
-        JButton productImage7 = new JButton(imageIcon7);
-        productImage7.setBounds(467, 354, 150, 117);
-        frame.getContentPane().add(productImage7);
-        productImage7.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-              //  new ProductDetailGui(productId); // Open the product details page 
-            }
-        });
-
-        JLabel lblAirpods = new JLabel("Airpods (3rd Gen)");
-        lblAirpods.setFont(new Font("Serif", Font.PLAIN, 14));
-        lblAirpods.setBounds(467, 481, 130, 21);
-        frame.getContentPane().add(lblAirpods);
-
-        ImageIcon imageIcon8 = new ImageIcon(product.getProductImageURL());
-        JButton productImage8 = new JButton(imageIcon8);
-        productImage8.setBounds(658, 354, 150, 117);
-        frame.getContentPane().add(productImage8);
-        productImage8.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-              //  new ProductDetailGui(productId); // Open the product details page 
-            }
-        });
-
-        JLabel lblAppleWatchSeries9 = new JLabel("Apple Watch Series 9");
-        lblAppleWatchSeries9.setFont(new Font("Serif", Font.PLAIN, 14));
-        lblAppleWatchSeries9.setBounds(658, 481, 180, 21);
-        frame.getContentPane().add(lblAppleWatchSeries9);
-        
-        ImageIcon imageIcon9 = new ImageIcon(product.getProductImageURL());
-        JButton productImage9 = new JButton(imageIcon9);
-        productImage9.setBounds(880, 161, 150, 117);
-        frame.getContentPane().add(productImage9);
-        productImage9.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-              //  new ProductDetailGui(productId); // Open the product details page 
-            }
-        });
-        
-        JLabel lblIpadProInch = new JLabel("Ipad Pro 12.9-inch");
-        lblIpadProInch.setFont(new Font("Serif", Font.PLAIN, 14));
-        lblIpadProInch.setBounds(880, 288, 130, 21);
-        frame.getContentPane().add(lblIpadProInch);
-        
-        
-        JLabel lblAppleWatchSe = new JLabel("Apple Watch SE");
-        lblAppleWatchSe.setFont(new Font("Serif", Font.PLAIN, 14));
-        lblAppleWatchSe.setBounds(880, 481, 180, 21);
-        frame.getContentPane().add(lblAppleWatchSe);
-        
-        ImageIcon imageIcon10 = new ImageIcon(product.getProductImageURL());
-        JButton productImage10 = new JButton(imageIcon10);
-        productImage10.setBounds(880, 354, 150, 117);
-        frame.getContentPane().add(productImage10);
-        productImage10.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-              //  new ProductDetailGui(productId); // Open the product details page 
-            }
-        });
-        
-        
-        JLabel lblPrice1 = new JLabel("RM 3199");
-        lblPrice1.setFont(new Font("Serif", Font.PLAIN, 12));
-        lblPrice1.setBounds(92, 321, 63, 21);
-        frame.getContentPane().add(lblPrice1);
-
-        JLabel lblPrice2 = new JLabel("RM 4299");
-        lblPrice2.setFont(new Font("Serif", Font.PLAIN, 12));
-        lblPrice2.setBounds(282, 321, 63, 21);
-        frame.getContentPane().add(lblPrice2);
-
-        JLabel lblPrice3 = new JLabel("RM 5699");
-        lblPrice3.setFont(new Font("Serif", Font.PLAIN, 12));
-        lblPrice3.setBounds(467, 319, 63, 21);
-        frame.getContentPane().add(lblPrice3);
-
-        JLabel lblPrice4 = new JLabel("RM 2999");
-        lblPrice4.setFont(new Font("Serif", Font.PLAIN, 12));
-        lblPrice4.setBounds(658, 319, 63, 21);
-        frame.getContentPane().add(lblPrice4);
-
-        JLabel lblRm8 = new JLabel("RM 2999");
-        lblRm8.setFont(new Font("Serif", Font.PLAIN, 12));
-        lblRm8.setBounds(658, 512, 63, 21);
-        frame.getContentPane().add(lblRm8);
-
-        JLabel lblPrice7 = new JLabel("RM 5699");
-        lblPrice7.setFont(new Font("Serif", Font.PLAIN, 12));
-        lblPrice7.setBounds(467, 512, 63, 21);
-        frame.getContentPane().add(lblPrice7);
-
-        JLabel lblPrice6 = new JLabel("RM 2999");
-        lblPrice6.setFont(new Font("Serif", Font.PLAIN, 12));
-        lblPrice6.setBounds(282, 512, 63, 21);
-        frame.getContentPane().add(lblPrice6);
-
-        JLabel lblPrice5 = new JLabel("RM 5699");
-        lblPrice5.setFont(new Font("Serif", Font.PLAIN, 12));
-        lblPrice5.setBounds(91, 512, 63, 21);
-        frame.getContentPane().add(lblPrice5);
-        
-      
-        JLabel lblRm9 = new JLabel("RM 5299");
-        lblRm9.setFont(new Font("Serif", Font.PLAIN, 12));
-        lblRm9.setBounds(880, 319, 63, 21);
-        frame.getContentPane().add(lblRm9);
-
-        
-        JLabel lblRm10 = new JLabel("RM 1199");
-        lblRm10.setFont(new Font("Serif", Font.PLAIN, 12));
-        lblRm10.setBounds(880, 512, 63, 21);
-        frame.getContentPane().add(lblRm10);
-
-        frame.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new ProductGui();  // Create and show the frame
-            }
-        });
-    }
 }
