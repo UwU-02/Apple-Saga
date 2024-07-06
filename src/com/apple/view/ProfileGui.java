@@ -67,9 +67,10 @@ public class ProfileGui extends JFrame {
 		JButton buttonLogout = new JButton("Logout");
 		buttonLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				UserSession.getInstance().clearSession();
 				LoginPageGui frame = new LoginPageGui();
 				frame.setVisible(true);
+				dispose();
 			}
 		});
 		buttonLogout.setFont(new Font("Times New Roman", Font.PLAIN, 16));
