@@ -1,26 +1,28 @@
 package view;
 
 import java.awt.EventQueue;
-import com.apple.model.Product;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import model.Product;
+
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextField;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class ProductDetailGui extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private JTextField textFieldReview;
-private static String productId;
+private static int productId;
     /**
      * Launch the application.
      */
@@ -40,7 +42,7 @@ private static String productId;
     /**
      * Create the frame.
      */
-    public ProductDetailGui(String productId) {
+    public ProductDetailGui(int productId) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 960, 600);
         contentPane = new JPanel();
@@ -57,7 +59,7 @@ private static String productId;
         JButton buttonBack = new JButton("Back");
         buttonBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new ProductGui();  //back to ProductGui page
+                new ProductGui(null, null, null, null,null);  //back to ProductGui page
             }
         });
         buttonBack.setFont(new Font("Times New Roman", Font.PLAIN, 16));
