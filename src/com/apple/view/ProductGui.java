@@ -18,20 +18,22 @@ public class ProductGui extends JFrame {
     private JTextField txtSearch;
     private ProfileGui profileGui;
 
-    public ProductGui(List<Product> products , JFrame existingFrame) {
-        this.profileGui = profileGui;
+    public ProductGui(List<Product> products, JFrame existingFrame, ProfileGui profileGui, String email, String password) {
+    	this.profileGui = profileGui != null ? profileGui : new ProfileGui(email, password);
 
-    	if (existingFrame != null) {
-           frame = existingFrame;
-           frame.getContentPane().removeAll();
+        if (existingFrame != null) {
+            frame = existingFrame;
+            frame.getContentPane().removeAll();
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setBounds(100, 100, 1180, 690);
         } else {
-        frame = new JFrame();
-        frame.setBounds(100, 100, 1180, 690);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame = new JFrame();
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setBounds(100, 100, 1180, 690);
         }
         frame.getContentPane().setLayout(null);
 
-        JLabel storeName = new JLabel("APPLE SAGA STORE ");
+        JLabel storeName = new JLabel("APPLE SAGA STORE");
         storeName.setFont(new Font("Microsoft New Tai Lue", Font.BOLD, 24));
         storeName.setBounds(71, 39, 239, 45);
         frame.getContentPane().add(storeName);
@@ -57,22 +59,24 @@ public class ProductGui extends JFrame {
         txtSearch.setBounds(757, 95, 150, 19);
         frame.getContentPane().add(txtSearch);
         txtSearch.setColumns(10);
-        
+
         JButton Profile = new JButton("USER PROFILE");
         Profile.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		
-        	}
+            public void actionPerformed(ActionEvent e) {
+                profileGui.setVisible(true); // Show the existing ProfileGui
+                frame.dispose(); // Close the ProductGui frame
+            }
         });
         Profile.setBounds(844, 54, 150, 21);
         frame.getContentPane().add(Profile);
-        
+
+
         displayProducts(products);
         frame.revalidate();
         frame.repaint();
         frame.setVisible(true);
     }
-    
+
     private void displayProducts(List<Product> products) {
         int x = 92;
         int y = 161;
@@ -83,7 +87,7 @@ public class ProductGui extends JFrame {
 
         for (int i = 0; i < Math.min(products.size(), 10); i++) {
             Product product = products.get(i);
-            
+
             String imageUrl = "/com/apple/resources/product_images/" + product.getProductImageURL();
             URL url = getClass().getResource(imageUrl);
 
@@ -99,7 +103,7 @@ public class ProductGui extends JFrame {
 
             System.out.println("URL: " + url); // Print the URL to the console
 
-            if (url!= null) {
+            if (url != null) {
                 try {
                     File file = new File(url.getFile());
                     if (!file.exists()) {
@@ -120,7 +124,7 @@ public class ProductGui extends JFrame {
                 System.err.println("Error loading image: " + e.getMessage());
                 imageIcon = new ImageIcon("path/to/placeholder.png");
             }
-            
+
             JButton productButton = new JButton(imageIcon);
             productButton.setBounds(x, y, width, height);
             frame.getContentPane().add(productButton);
@@ -129,9 +133,9 @@ public class ProductGui extends JFrame {
             final int productId = product.getProductId();
             productButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                	frame.dispose();
-                    ProductDetailGui frame =  new ProductDetailGui(productId); // Open the product details page 
-                    frame.setVisible(true);
+                    frame.dispose();
+                    ProductDetailGui detailGui = new ProductDetailGui(productId); // Open the product details page
+                    detailGui.setVisible(true);
                 }
             });
 
@@ -157,16 +161,19 @@ public class ProductGui extends JFrame {
         }
         frame.setVisible(true); // Make the frame visible
     }
-    
+
     public static void main(String[] args) {
-    	SwingUtilities.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                String userEmail = "user@example.com"; // Retrieve this from your login session
+                String userPassword = "userPassword"; // Retrieve this from your login session
                 ProductController controller = new ProductController();
                 controller.connectToDatabase();
                 List<Product> products = controller.getAllProduct();
-                new ProductGui(products, null);
+                ProfileGui profileGui = new ProfileGui(userEmail, userPassword);
+                new ProductGui(products, null, profileGui, userEmail, userPassword);
             }
         });
     }
-}
 
+}
