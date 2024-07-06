@@ -17,10 +17,14 @@ public class ProductGui extends JFrame {
     private JFrame frame;
     private JTextField txtSearch;
     private ProfileGui profileGui;
+    private String email;
+    private String password;
 
     public ProductGui(List<Product> products, JFrame existingFrame, ProfileGui profileGui, String email, String password) {
     	this.profileGui = profileGui != null ? profileGui : new ProfileGui(email, password);
-
+    	this.email = email;
+        this.password = password;    	
+    	
         if (existingFrame != null) {
             frame = existingFrame;
             frame.getContentPane().removeAll();
@@ -134,7 +138,7 @@ public class ProductGui extends JFrame {
             productButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     frame.dispose();
-                    ProductDetailGui detailGui = new ProductDetailGui(productId); // Open the product details page
+                    ProductDetailGui detailGui = new ProductDetailGui(product, email, password);
                     detailGui.setVisible(true);
                 }
             });
