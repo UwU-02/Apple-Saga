@@ -12,19 +12,23 @@ import java.util.ArrayList;
 import com.apple.model.*;
 
 public class ShoppingCartController extends Controller{
-    public void connectToDatabase()
+
+    public void connectToDatabase() throws SQLException
     {
-        try{
+    	conn.setAutoCommit(false);
+    	try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/applesaga", "root", "");
         } catch (ClassNotFoundException | SQLException err)
         {
             System.out.println(err.getMessage());
         }
+    	conn.commit();
     }
 
     public ShoppingCart getShoppingCartDetailbyCustomerId(int customerId)
     {
+    	
         ShoppingCart shoppingCart = new ShoppingCart();
         try{
             String query = "SELECT * FROM cart WHERE customerId = ?";
