@@ -17,11 +17,9 @@ public class MyDatabase {
 		return conn;
 	}
 	
-
-	
 	public static void main(String[] args) {
 		try {
-			System.out.println(MyDatabase.doConnection());
+			System.out.println(myDatabase.doConnection());
 		} catch (ClassNotFoundException | SQLException e) {
 
 			e.printStackTrace();
@@ -29,6 +27,5 @@ public class MyDatabase {
 		
 	}
 
+
 }
-	
-	
