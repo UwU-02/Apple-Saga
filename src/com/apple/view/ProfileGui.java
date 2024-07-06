@@ -1,35 +1,33 @@
-package com.apple.view;
+package view;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import com.apple.controller.ShoppingCartController;
-import com.apple.controller.CustomerController;
-import com.apple.model.CartItem;
-import com.apple.model.Customer;
-import com.apple.model.Product;
-import com.apple.model.ShoppingCart;
-import com.apple.model.UserSession;
-
+import controller.CustomerController;
+import controller.ProductController;
+import model.Customer;
+import model.Product;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
 import java.awt.Font;
+import java.awt.Image;
 import javax.swing.JButton;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
 
 public class ProfileGui extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JLabel showCustName;
+	private JLabel showCustEmail;
 
 	/**
 	 * Launch the application.
@@ -38,7 +36,7 @@ public class ProfileGui extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ProfileGui frame = new ProfileGui();
+					ProfileGui frame = new ProfileGui("customerEmail", "customerPassword");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -46,11 +44,20 @@ public class ProfileGui extends JFrame {
 			}
 		});
 	}
+	public void updateCustomerDetails(String email, String password) {
+	    CustomerController customerController = new CustomerController();
+	    Customer customer = customerController.getCustomerDetailbyUsernamePassword(email, password);
+
+	    if (customer != null) {
+	        showCustName.setText("USERNAME: " + customer.getCustomerName());
+	        showCustEmail.setText("EMAIL: " + customer.getCustomerEmail());
+	    }
+	}
 
 	/**
 	 * Create the frame.
 	 */
-	public ProfileGui() {
+	public ProfileGui(String email, String password) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 960, 600);
 		contentPane = new JPanel();
@@ -67,10 +74,9 @@ public class ProfileGui extends JFrame {
 		JButton buttonLogout = new JButton("Logout");
 		buttonLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				UserSession.getInstance().clearSession();
+				
 				LoginPageGui frame = new LoginPageGui();
 				frame.setVisible(true);
-				dispose();
 			}
 		});
 		buttonLogout.setFont(new Font("Times New Roman", Font.PLAIN, 16));
@@ -78,64 +84,57 @@ public class ProfileGui extends JFrame {
 		contentPane.add(buttonLogout);
 		
 		JLabel lblNewLabel_1 = new JLabel("Profile");
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 32));
-		lblNewLabel_1.setBounds(414, 31, 135, 39);
+		lblNewLabel_1.setBounds(402, 31, 135, 39);
 		contentPane.add(lblNewLabel_1);
 		
 		JButton buttonOrder = new JButton("Order History ");
 		buttonOrder.setFont(new Font("Microsoft New Tai Lue", Font.PLAIN, 18));
-		buttonOrder.setBounds(224, 316, 498, 61);
+		buttonOrder.setBounds(224, 367, 498, 39);
 		contentPane.add(buttonOrder);
 		
 		JButton buttonShopping = new JButton("Shopping Cart");
 		buttonShopping.setFont(new Font("Microsoft New Tai Lue", Font.PLAIN, 18));
-		buttonShopping.setBounds(225, 407, 497, 61);
+		buttonShopping.setBounds(225, 416, 497, 39);
 		contentPane.add(buttonShopping);
-
-		buttonShopping.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        dispose();
-		        ShoppingCartController cartController = new ShoppingCartController();
-		        try {
-					cartController.connectToDatabase();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-		        
-		        int customerId = getCurrentCustomerId(); 
-		        
-		        ShoppingCart cart = cartController.getShoppingCartDetailbyCustomerId(customerId);
-		        List<Product> products = new ArrayList<>();
-		        
-		        if (cart != null && cart.getCartItems() != null) {
-		            for (CartItem item : cart.getCartItems()) {
-		                products.add(item.getCartItemProduct());
-		            }
-		        }
-		        
-		        com.apple.view.ShoppingCart frame = new com.apple.view.ShoppingCart(products);
-		        frame.setVisible(true);
-		    }
-		});
-		JLabel lblNewLabel_2 = new JLabel("Username ");
-		lblNewLabel_2.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		lblNewLabel_2.setBounds(432, 250, 79, 34);
-		contentPane.add(lblNewLabel_2);
 		
-		JLabel lblNewLabel_2_1 = new JLabel(" Email");
-		lblNewLabel_2_1.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		lblNewLabel_2_1.setBounds(442, 272, 57, 34);
-		contentPane.add(lblNewLabel_2_1);
+		showCustName = new JLabel("Username ");
+		showCustName.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		showCustName.setBounds(373, 238, 195, 34);
+		contentPane.add(showCustName);
+		
+		showCustEmail = new JLabel(" Email");
+		showCustEmail.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		showCustEmail.setBounds(373, 272, 195, 34);
+		contentPane.add(showCustEmail);
 		
 		JLabel lblNewLabel_3 = new JLabel("New label");
-		lblNewLabel_3.setIcon(new ImageIcon("C:\\This PC\\Downloads\\profile.jpg"));
-		lblNewLabel_3.setBounds(373, 80, 195, 171);
-		contentPane.add(lblNewLabel_3);
+        try {
+            Image image = ImageIO.read(new File("C:\\Users\\Manni\\Documents\\UNIVERSITY STUDY\\Y2S2 sub\\OOP SANUSI\\PROJECT APPLE\\photos\\profile.png"));
+            Image scaledImage = image.getScaledInstance(128, 128, Image.SCALE_SMOOTH);
+            lblNewLabel_3.setIcon(new ImageIcon(scaledImage));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        lblNewLabel_3.setPreferredSize(new Dimension(128, 128));
+        lblNewLabel_3.setBounds(402, 90, 128, 128);
+        contentPane.add(lblNewLabel_3);
+        
+        JButton btnShopping = new JButton("Shop Products");
+        btnShopping.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ProductController controller = new ProductController();
+                List<Product> products = controller.getAllProduct();
+                new ProductGui(products, null, ProfileGui.this, email, password); // Pass the email and password
+                setVisible(false); 
+            }
+        });
+        btnShopping.setFont(new Font("Microsoft New Tai Lue", Font.PLAIN, 18));
+        btnShopping.setBounds(224, 316, 498, 39);
+        contentPane.add(btnShopping);
+		
+        updateCustomerDetails(email, password);
+		
 	}
-
-	private int getCurrentCustomerId() {
-	    return UserSession.getInstance().getCurrentUserId();
-	}
-	
 }
