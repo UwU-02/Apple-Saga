@@ -9,6 +9,8 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ProductDetailGui extends JFrame {
 
@@ -50,6 +52,12 @@ public class ProductDetailGui extends JFrame {
 		contentPane.add(lblNewLabel);
 		
 		JButton buttonBack = new JButton("Back");
+		buttonBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new ProductGui();  //back to ProductGui page
+			
+			}
+		});
 		buttonBack.setFont(new Font("Times New Roman", Font.PLAIN, 16));
 		buttonBack.setBounds(39, 70, 85, 34);
 		contentPane.add(buttonBack);
@@ -57,43 +65,53 @@ public class ProductDetailGui extends JFrame {
 		JLabel lblNewLabel_1 = new JLabel("Image");
 		lblNewLabel_1.setBounds(50, 184, 45, 13);
 		contentPane.add(lblNewLabel_1);
-
+		
 		ImageIcon imageIcon = new ImageIcon(product.getProductImageURL());
         JButton productImage = new JButton(imageIcon);
         productImage.setBounds(282, 161, 150, 117);
         frame.getContentPane().add(productImage);
         productImage.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-              //  new ProductDetailGui(productId); // Open the product details page 
+              //  new ProductGui(productId); // Open the product page 
             }
         });
 		
-		JLabel lblNewLabel_2 = new JLabel("Airpods Pro");
+		JLabel lblNewLabel_2 = new JLabel("Item");
 		lblNewLabel_2.setFont(new Font("Segoe UI", Font.BOLD, 14));
 		lblNewLabel_2.setBounds(406, 141, 137, 22);
 		contentPane.add(lblNewLabel_2);
 		
-		JLabel lblNewLabel_2_1 = new JLabel("RM 999");
+		JLabel lblNewLabel_2_1 = new JLabel("price");
 		lblNewLabel_2_1.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		lblNewLabel_2_1.setBounds(406, 173, 137, 22);
 		contentPane.add(lblNewLabel_2_1);
 		
-		JLabel lblNewLabel_2_2 = new JLabel("White");
+		JLabel lblNewLabel_2_2 = new JLabel("colour");
 		lblNewLabel_2_2.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		lblNewLabel_2_2.setBounds(406, 194, 137, 22);
 		contentPane.add(lblNewLabel_2_2);
 		
-		JLabel lblNewLabel_2_3 = new JLabel("Stock : 10");
+		JLabel lblNewLabel_2_3 = new JLabel("stock");
 		lblNewLabel_2_3.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		lblNewLabel_2_3.setBounds(406, 215, 137, 22);
 		contentPane.add(lblNewLabel_2_3);
 		
 		JButton btnNewButton = new JButton("ADD TO CART");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new ShoppingCart();
+			}
+		});
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnNewButton.setBounds(428, 288, 160, 34);
 		contentPane.add(btnNewButton);
 		
 		JButton btnBuyNow = new JButton("BUY NOW");
+		btnBuyNow.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 new CheckoutGui(); //go to checkout page for payment
+			}
+		});
 		btnBuyNow.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnBuyNow.setBounds(631, 288, 160, 34);
 		contentPane.add(btnBuyNow);
