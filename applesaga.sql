@@ -50,16 +50,16 @@ CREATE TABLE PRODUCT
    PRIMARY KEY (productId),
    FOREIGN KEY (categoryId) REFERENCES PRODUCT_CATEGORY (categoryId)
 );
-INSERT INTO PRODUCT VALUES (1, 'iPhone 14', 4299.00, 'White', 20, 4); 
-INSERT INTO PRODUCT VALUES (2, 'iPhone 13', 3199.00, 'Pink', 15,4);
-INSERT INTO PRODUCT VALUES (3, 'iPhone 15', 5699.00, 'Black', 35, 4);
-INSERT INTO PRODUCT VALUES (4, 'iPhone 15 Pro Max', 6499.00, 'Blue Titanium', 15, 4);
-INSERT INTO PRODUCT VALUES (5, 'iPad Pro 12.9-Inch', 5299.00, 'Gray', 15,3);
-INSERT INTO PRODUCT VALUES (6, 'AirPods (3rd Gen)', 749.00, 'white', 30, 2);
-INSERT INTO PRODUCT VALUES (7, 'AirPods Pro', 999.00, 'white', 10, 2);
-INSERT INTO PRODUCT VALUES (8, 'Apple Watch Series 9', 1899.00, 'Sliver', 25,1);
-INSERT INTO PRODUCT VALUES (9, 'Apple Watch SE', 1199.00, 'Sliver', 29,1);
-INSERT INTO PRODUCT VALUES (10,'iPad Air 11-Inch', 2999.00, 'Purple',31, 3);
+INSERT INTO PRODUCT VALUES (1, 'iPhone 14', 4299.00, 'White', 20, 4, 'Iphone_14.jpg'); 
+INSERT INTO PRODUCT VALUES (2, 'iPhone 13', 3199.00, 'Pink', 15,4, 'Iphone_13.jpeg');
+INSERT INTO PRODUCT VALUES (3, 'iPhone 15', 5699.00, 'Black', 35, 4, 'Iphone_15.jpeg');
+INSERT INTO PRODUCT VALUES (4, 'iPhone 15 Pro Max', 6499.00, 'Blue Titanium', 15, 4, 'Iphone_15_Pro_Max.jpeg');
+INSERT INTO PRODUCT VALUES (5, 'iPad Pro 12.9-Inch', 5299.00, 'Gray', 15,3, 'iPad Pro 12.9-Inch.jpeg');
+INSERT INTO PRODUCT VALUES (6, 'AirPods (3rd Gen)', 749.00, 'white', 30, 2, 'Airpods_3rd_Gen.jpeg');
+INSERT INTO PRODUCT VALUES (7, 'AirPods Pro', 999.00, 'white', 10, 2, 'Airpods_Pro.jpeg');
+INSERT INTO PRODUCT VALUES (8, 'Apple Watch Series 9', 1899.00, 'Sliver', 25,1, 'Apple_Watch_Series_9.jpeg');
+INSERT INTO PRODUCT VALUES (9, 'Apple Watch SE', 1199.00, 'Sliver', 29,1, 'Apple_Watch_SE.jpeg');
+INSERT INTO PRODUCT VALUES (10,'iPad Air 11-Inch', 2999.00, 'Purple',31, 3, 'Ipad_Air_11-Inch.jpeg');
 
 
 
