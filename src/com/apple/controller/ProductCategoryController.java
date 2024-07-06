@@ -1,4 +1,4 @@
-package com.apple.controller;
+package controller;
 
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.apple.model.ProductCategory;
+import model.*;
 
 public class ProductCategoryController extends Controller {
 	
@@ -37,7 +37,7 @@ public class ProductCategoryController extends Controller {
             while(rs.next())
             {
                 productCategory.setCategoryId(rs.getInt("categoryId"));
-                productCategory.setCategoryName(rs.getString("name"));
+                productCategory.setCategoryName(rs.getString("categoryName"));
             }
         } catch (SQLException err)
         {
@@ -61,7 +61,7 @@ public class ProductCategoryController extends Controller {
             {
                 ProductCategory productCategory = new ProductCategory();
                 productCategory.setCategoryId(rs.getInt("categoryId"));
-                productCategory.setCategoryName(rs.getString("name"));
+                productCategory.setCategoryName(rs.getString("categoryName"));
                 productCategories.add(productCategory);
             }
         } catch (SQLException err)
