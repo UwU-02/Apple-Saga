@@ -172,7 +172,7 @@ INSERT INTO ORDER_LIST (productId, orderId, productQuantity) VALUES (2, 11, 1);
 CREATE TABLE CART_ITEM (
   cartId int(5),
   productId int(5) REFERENCES PRODUCT (productId),
-  quantity int(2) AUTO_INCREMENT,
+  quantity int(2) DEFAULT 1,
   PRIMARY KEY (cartId)
 )
 
