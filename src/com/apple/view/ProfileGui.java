@@ -1,15 +1,29 @@
-package view;
+package com.apple.view;
 
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import com.apple.controller.ShoppingCartController;
+import com.apple.controller.CustomerController;
+import com.apple.model.CartItem;
+import com.apple.model.Customer;
+import com.apple.model.Product;
+import com.apple.model.ShoppingCart;
+import com.apple.model.UserSession;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class ProfileGui extends JFrame {
@@ -76,7 +90,33 @@ public class ProfileGui extends JFrame {
 		buttonShopping.setFont(new Font("Microsoft New Tai Lue", Font.PLAIN, 18));
 		buttonShopping.setBounds(225, 407, 497, 61);
 		contentPane.add(buttonShopping);
-		
+
+		buttonShopping.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        dispose();
+		        ShoppingCartController cartController = new ShoppingCartController();
+		        try {
+					cartController.connectToDatabase();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		        
+		        int customerId = getCurrentCustomerId(); 
+		        
+		        ShoppingCart cart = cartController.getShoppingCartDetailbyCustomerId(customerId);
+		        List<Product> products = new ArrayList<>();
+		        
+		        if (cart != null && cart.getCartItems() != null) {
+		            for (CartItem item : cart.getCartItems()) {
+		                products.add(item.getCartItemProduct());
+		            }
+		        }
+		        
+		        com.apple.view.ShoppingCart frame = new com.apple.view.ShoppingCart(products);
+		        frame.setVisible(true);
+		    }
+		});
 		JLabel lblNewLabel_2 = new JLabel("Username ");
 		lblNewLabel_2.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		lblNewLabel_2.setBounds(432, 250, 79, 34);
@@ -88,9 +128,13 @@ public class ProfileGui extends JFrame {
 		contentPane.add(lblNewLabel_2_1);
 		
 		JLabel lblNewLabel_3 = new JLabel("New label");
-		lblNewLabel_3.setIcon(new ImageIcon("C:\\Users\\User\\Downloads\\profile.jpg"));
+		lblNewLabel_3.setIcon(new ImageIcon("C:\\This PC\\Downloads\\profile.jpg"));
 		lblNewLabel_3.setBounds(373, 80, 195, 171);
 		contentPane.add(lblNewLabel_3);
 	}
 
+	private int getCurrentCustomerId() {
+	    return UserSession.getInstance().getCurrentUserId();
+	}
+	
 }
