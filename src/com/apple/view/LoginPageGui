@@ -1,8 +1,7 @@
-package com.apple.view;
+package view;
 
-import com.apple.controller.CustomerController;
-import com.apple.model.Customer;
-import com.apple.model.UserSession;
+import controller.CustomerController;
+import model.Customer;
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
@@ -135,7 +134,7 @@ public class LoginPageGui extends JFrame {
 		        // Basic email format validation
 		        if (!isValidEmail(customerEmail)) {
 		            JOptionPane.showMessageDialog(LoginPageGui.this, 
-		                "Please enter a valid email address.", 
+		                "Please enter a valid email address (XX@mail.com). ", 
 		                "Invalid Email", 
 		                JOptionPane.WARNING_MESSAGE);
 		            return;
@@ -149,8 +148,7 @@ public class LoginPageGui extends JFrame {
 		            if (loggedInCustomer != null) {
 		                // Successful login
 		                JOptionPane.showMessageDialog(LoginPageGui.this, "Login successful!");
-		                UserSession.getInstance().setCurrentUserId(loggedInCustomer.getCustomerId());
-		                ProfileGui frame = new ProfileGui();
+		                ProfileGui frame = new ProfileGui(customerEmail, customerPassword);
 		                frame.setVisible(true);
 		                dispose();
 		            } else {
@@ -176,5 +174,5 @@ public class LoginPageGui extends JFrame {
 		contentPane.add(btnNewButton);
 	}
 }
-	
+		
 		
