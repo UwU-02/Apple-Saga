@@ -106,7 +106,7 @@ public class ProfileGui extends JFrame {
 		
 		showCustEmail = new JLabel(" Email");
 		showCustEmail.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		showCustEmail.setBounds(373, 272, 195, 34);
+		showCustEmail.setBounds(373, 272, 250, 34);
 		contentPane.add(showCustEmail);
 		
 		JLabel lblNewLabel_3 = new JLabel("New label");
