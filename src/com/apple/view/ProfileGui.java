@@ -1,4 +1,4 @@
-package view;
+package com.apple.view;
 
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -16,7 +16,7 @@ import com.apple.model.ShoppingCart;
 import com.apple.model.UserSession;
 import com.mysql.jdbc.Connection;
 
-import database.MyDatabase;
+import com.database.myDatabase;
 
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -108,7 +108,7 @@ public class ProfileGui extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				 Connection conn;
 				try {
-					conn = (Connection) MyDatabase.doConnection();
+					conn = (Connection) myDatabase.doConnection();
 					  // Fetch customer data as needed (example)
 	                 Customer customer = new Customer();
 					OrderHistoryGui frame = new OrderHistoryGui(conn, customer,email,password);
@@ -149,7 +149,7 @@ public class ProfileGui extends JFrame {
 		            }
 		        }
 		        
-		        view.ShoppingCart frame = new view.ShoppingCart(products);
+		        com.apple.view.ShoppingCart frame = new com.apple.view.ShoppingCart();
 		        frame.setVisible(true);
 		    }
 		});
@@ -166,7 +166,7 @@ public class ProfileGui extends JFrame {
 		
 		JLabel lblNewLabel_3 = new JLabel("New label");
         try {
-            Image image = ImageIO.read(new File("C:\\Users\\TUF\\Downloads\\UTeM\\SEM 4\\BITP3113 OBJECT ORIENTED PROGRAMMING\\Project\\src\\resources\\product_images\\profile.png"));
+            Image image = ImageIO.read(new File("C:\\Users\\User\\Downloads\\rsc\\profile.png"));
             //*****use your own location*******
             Image scaledImage = image.getScaledInstance(128, 128, Image.SCALE_SMOOTH);
             lblNewLabel_3.setIcon(new ImageIcon(scaledImage));
