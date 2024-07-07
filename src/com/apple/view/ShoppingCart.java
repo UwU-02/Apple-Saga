@@ -6,6 +6,9 @@ import controller.ShoppingCartController;
 import model.CartItem;
 import model.Product;
 import model.UserSession;
+
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -17,13 +20,19 @@ import java.net.URL;
 import java.util.List;
 
 public class ShoppingCart {
+	private JPanel productPanel;
     private JFrame frame;
     private String email;
     private String password;
+    private double total = 0.0;
+    private double sst = 0.0;
+    private JLabel TotalPrice;
 
     public ShoppingCart(String email, String password) {
     	this.email = email;
         this.password = password;
+        productPanel = new JPanel();
+        productPanel.setLayout(new BoxLayout(productPanel, BoxLayout.Y_AXIS));
         
         frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // Make sure to close the application
@@ -64,8 +73,26 @@ public class ShoppingCart {
         shoppingCartLabel.setBounds(317, 78, 254, 45);
         frame.getContentPane().add(shoppingCartLabel);
 
+        TotalPrice = new JLabel();
+        TotalPrice.setFont(new Font("Microsoft New Tai Lue", Font.PLAIN, 12));
+        TotalPrice.setBounds(686, 470, 100, 13);
+        frame.getContentPane().add(TotalPrice);
+        
         // Fetch and display the cart items
         displayCartItems();
+
+        JScrollPane scrollPane = new JScrollPane(productPanel);
+        scrollPane.setBounds(85, 162, 715, 300);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
+        frame.getContentPane().add(scrollPane);
+
+        JLabel lblTotalSstIncluded = new JLabel("Total(6% sst included) :");
+        lblTotalSstIncluded.setFont(new Font("Microsoft New Tai Lue", Font.BOLD, 12));
+        lblTotalSstIncluded.setBounds(510, 470, 167, 13);
+        frame.getContentPane().add(lblTotalSstIncluded);
+
 
         frame.setVisible(true);  // Make the frame visible
     }
@@ -79,13 +106,22 @@ public class ShoppingCart {
         System.out.println("Displaying items for cart ID " + cartId + ": " + cartItems);
 
         if (cartItems != null && !cartItems.isEmpty()) {
-            int yOffset = 162;
-            double total = 0.0;
+            total = 0.0;
+            
             for (CartItem cartItem : cartItems) {
-                Product product = cartItem.getCartItemProduct();
+            	Product product = cartItem.getCartItemProduct();
+                int quantity = cartItem.getCartItemQuantity();
                 String imageUrl = "/com/apple/resources/product_images/" + product.getProductImageURL();
                 URL url = getClass().getResource(imageUrl);
 
+                JPanel itemPanel = new JPanel();
+                itemPanel.setLayout(null);
+                itemPanel.setPreferredSize(new Dimension(680, 120));
+                itemPanel.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(new Color(200, 200, 200)),
+                    BorderFactory.createEmptyBorder(10, 10, 10, 10)
+                ));
+                
                 if (url == null) {
                     String filePath = System.getProperty("user.dir") + "/src" + imageUrl;
                     File file = new File(filePath);
@@ -109,38 +145,39 @@ public class ShoppingCart {
                 }
 
                 JLabel productImage = new JLabel(imageIcon);
-                productImage.setBounds(85, yOffset, 139, 91);
-                frame.getContentPane().add(productImage);
+                productImage.setBounds(10, 10, 139, 91);
+                itemPanel.add(productImage);
 
                 JLabel productName = new JLabel(product.getProductName());
                 productName.setFont(new Font("Times New Roman", Font.BOLD, 14));
-                productName.setBounds(269, yOffset, 139, 13);
-                frame.getContentPane().add(productName);
+                productName.setBounds(160, 10, 300, 20);
+                itemPanel.add(productName);
+
+                JLabel quantityLabel = new JLabel("Quantity: " + quantity);
+                quantityLabel.setFont(new Font("Microsoft New Tai Lue", Font.PLAIN, 12));
+                quantityLabel.setBounds(160, 40, 100, 20);
+                itemPanel.add(quantityLabel);
 
                 JLabel productPrice = new JLabel(String.format("RM %.2f", product.getProductPrice()));
                 productPrice.setFont(new Font("Microsoft New Tai Lue", Font.PLAIN, 12));
-                productPrice.setBounds(686, yOffset + 46, 100, 13);
-                frame.getContentPane().add(productPrice);
+                productPrice.setBounds(560, 80, 100, 20);
+                itemPanel.add(productPrice);
 
-                yOffset += 154; // Adjust the offset for the next product
+                productPanel.add(itemPanel);
+                productPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+
                 total += product.getProductPrice() * cartItem.getCartItemQuantity(); // Add the product price to the total
             }
 
-            JLabel lblTotalSstIncluded = new JLabel("Total(6% sst included) :");
-            lblTotalSstIncluded.setFont(new Font("Microsoft New Tai Lue", Font.BOLD, 12));
-            lblTotalSstIncluded.setBounds(510, 462, 167, 13);
-            frame.getContentPane().add(lblTotalSstIncluded);
-
-            double sst = total * 0.06; // Calculate SST (6%)
-            JLabel TotalPrice = new JLabel(String.format("RM %.2f", total + sst));
-            TotalPrice.setFont(new Font("Microsoft New Tai Lue", Font.PLAIN, 12));
-            TotalPrice.setBounds(686, 462, 100, 13);
-            frame.getContentPane().add(TotalPrice);
+            sst = total * 0.06; // Calculate SST (6%)
+            TotalPrice.setText(String.format("RM %.2f", total + sst));
+            
+            
         } else {
-            JLabel emptyCartLabel = new JLabel("Your shopping cart is empty");
+        	JLabel emptyCartLabel = new JLabel("Your shopping cart is empty");
             emptyCartLabel.setFont(new Font("Times New Roman", Font.BOLD, 18));
-            emptyCartLabel.setBounds(300, 200, 300, 30);
-            frame.getContentPane().add(emptyCartLabel);
+            emptyCartLabel.setBounds(0, 0, 300, 30);
+            productPanel.add(emptyCartLabel);
         }
     }
 
