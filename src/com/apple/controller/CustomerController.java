@@ -1,4 +1,5 @@
-package controller;
+package Controller;
+
 
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -31,6 +32,7 @@ public class CustomerController extends Controller{
             while (rs.next()) {
                 customer = new Customer();
                 customer.setCustomerId(rs.getInt("customerId"));
+                UserSession.getInstance().setCurrentUserId(rs.getInt("customerId"));
                 customer.setCustomerName(rs.getString("customerName"));
                 customer.setCustomerEmail(rs.getString("customerEmail"));
                 customer.setCustomerContact(rs.getString("customerContact"));
