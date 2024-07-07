@@ -175,7 +175,6 @@ CREATE TABLE cart (
 );
 
 CREATE TABLE cart_item (
-    id INT AUTO_INCREMENT PRIMARY KEY,
     cartId INT NOT NULL,
     productId INT NOT NULL,
     quantity INT NOT NULL,
