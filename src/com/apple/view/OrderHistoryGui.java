@@ -13,11 +13,13 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-import com.apple.controller.CustomerController;
-import com.apple.controller.ShoppingOrderController;
+import Controller.CustomerController;
+import Controller.ShoppingOrderController;
 import database.MyDatabase;
-import com.apple.model.Customer;
-import com.apple.model.ShoppingOrder;
+import model.Customer;
+import model.OrderSummary;
+import model.ShoppingOrder;
+import model.UserSession;
 
 public class OrderHistoryGui extends JFrame {
 
@@ -28,17 +30,16 @@ public class OrderHistoryGui extends JFrame {
     private static String email;
     private static String password;
 
-    public OrderHistoryGui(Connection conn, Customer customer,String email, String password) {
-        this.orderController = new ShoppingOrderController();
+    public OrderHistoryGui(Connection conn, Customer customer, String email, String password) {
+        this.orderController = new ShoppingOrderController(); // Ensure connection is initialized inside the controller
         this.customer = customer;
-        this.email=email;
-        this.password=password;
-        
+        this.email = email;
+        this.password = password;
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 960, 600);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
@@ -50,10 +51,8 @@ public class OrderHistoryGui extends JFrame {
         JButton buttonBack = new JButton("Back");
         buttonBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
-            	
-            	ProfileGui frame = new ProfileGui(email, password);
-				frame.setVisible(true);
+                ProfileGui frame = new ProfileGui(email, password);
+                frame.setVisible(true);
                 dispose(); // Close current frame
             }
         });
@@ -70,20 +69,23 @@ public class OrderHistoryGui extends JFrame {
     }
 
     private void displayOrderHistory() {
-        List<ShoppingOrder> orders = orderController.getOrdersByCustomer(customer.getCustomerId());
+    	
+        List<OrderSummary> orderSummaries = orderController.getOrderSummariesByCustomer(UserSession.getInstance().getCurrentUserId());
         int yPosition = 145;
-        for (ShoppingOrder order : orders) {
-            JLabel lblOrderId = new JLabel("Order ID : " + order.getOrderId());
+        System.out.println(UserSession.getInstance().getCurrentUserId());
+        System.out.println("Number of orders: " + orderSummaries.size());
+        for (OrderSummary summary : orderSummaries) {
+            JLabel lblOrderId = new JLabel("Order ID : " + summary.getOrderId());
             lblOrderId.setFont(new Font("Times New Roman", Font.BOLD, 12));
             lblOrderId.setBounds(96, yPosition, 608, 27);
             contentPane.add(lblOrderId);
 
-            JLabel lblOrderTotal = new JLabel("Price : " + order.getOrderTotal());
+            JLabel lblOrderTotal = new JLabel("Price : " + summary.getTotalPrice());
             lblOrderTotal.setFont(new Font("Times New Roman", Font.BOLD, 12));
             lblOrderTotal.setBounds(96, yPosition + 37, 608, 27);
             contentPane.add(lblOrderTotal);
 
-            JLabel lblOrderStatus = new JLabel("Status: " + (order.isDeliveryStatus() ? "Delivered" : "Pending"));
+            JLabel lblOrderStatus = new JLabel("Status: " + summary.getDeliveryStatus());
             lblOrderStatus.setFont(new Font("Times New Roman", Font.BOLD, 12));
             lblOrderStatus.setBounds(96, yPosition + 74, 608, 27);
             contentPane.add(lblOrderStatus);
@@ -101,6 +103,8 @@ public class OrderHistoryGui extends JFrame {
 
             yPosition += 111; // Adjust position for the next order
         }
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public static void main(String[] args) {
@@ -113,9 +117,8 @@ public class OrderHistoryGui extends JFrame {
                     // Fetch customer data as needed (example)
                     Customer customer = new Customer();
 
-                   
-					// Initialize and display OrderHistoryGui
-                    OrderHistoryGui frame = new OrderHistoryGui(conn, customer,email,password);
+                    // Initialize and display OrderHistoryGui
+                    OrderHistoryGui frame = new OrderHistoryGui(conn, customer, email, password);
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
