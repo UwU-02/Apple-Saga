@@ -33,6 +33,7 @@ public class ReviewController extends Controller {
             while(rs.next()){
                 Review review = new Review();
                 review.setCaseId(rs.getInt("caseId"));
+	        review.setReviewCustomerId(rs.getInt("customerId"));
                 review.setReviewProductId(rs.getInt("productId"));
                 review.setReviewDescription(rs.getString("reviewDescription"));
            
