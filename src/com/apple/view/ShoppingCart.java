@@ -1,17 +1,25 @@
 package com.apple.view;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
-
+import com.apple.controller.ShoppingCartController;
+import com.apple.model.CartItem;
 import com.apple.model.Product;
-
+import com.apple.model.UserSession;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 public class ShoppingCart {
     private JFrame frame;
 
-    public ShoppingCart(List<Product> products) {
+    public ShoppingCart() {
         frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // Make sure to close the application
         frame.setSize(900, 600);  // Set the frame size
@@ -25,8 +33,9 @@ public class ShoppingCart {
         JButton backBttn = new JButton("BACK");
         backBttn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	frame.dispose(); 
-               new ProductGui();
+                frame.dispose();
+                ProfileGui profileFrame = new ProfileGui(null, null);
+                profileFrame.setVisible(true);
             }
         });
         backBttn.setFont(new Font("SansSerif", Font.PLAIN, 15));
@@ -38,22 +47,62 @@ public class ShoppingCart {
         checkoutBttn.setBounds(740, 510, 117, 43);
         frame.getContentPane().add(checkoutBttn);
         checkoutBttn.addActionListener(new ActionListener() {
-        	 public void actionPerformed(ActionEvent e) {
-        		 frame.dispose(); 
-                 new CheckoutGui();
-              }
-          });
-        JLabel shoppingCart = new JLabel("Shopping Cart");
-        shoppingCart.setHorizontalAlignment(SwingConstants.CENTER);
-        shoppingCart.setFont(new Font("Serif", Font.PLAIN, 20));
-        shoppingCart.setBounds(317, 78, 254, 45);
-        frame.getContentPane().add(shoppingCart);;
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                new CheckoutGui();
+            }
+        });
 
-        if (products != null && !products.isEmpty()) {
+        JLabel shoppingCartLabel = new JLabel("Shopping Cart");
+        shoppingCartLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        shoppingCartLabel.setFont(new Font("Serif", Font.PLAIN, 20));
+        shoppingCartLabel.setBounds(317, 78, 254, 45);
+        frame.getContentPane().add(shoppingCartLabel);
+
+        // Fetch and display the cart items
+        displayCartItems();
+
+        frame.setVisible(true);  // Make the frame visible
+    }
+
+    private void displayCartItems() {
+        ShoppingCartController cartController = new ShoppingCartController();
+        int customerId = UserSession.getInstance().getCurrentUserId();
+        int cartId = cartController.getCartIdbyCustomerId(customerId);
+        List<CartItem> cartItems = cartController.getAllCartItembyCartId(cartId);
+        
+        System.out.println("Displaying items for cart ID " + cartId + ": " + cartItems);
+
+        if (cartItems != null && !cartItems.isEmpty()) {
             int yOffset = 162;
             double total = 0.0;
-            for (Product product : products) {
-            	ImageIcon imageIcon = new ImageIcon(product.getProductImageURL());
+            for (CartItem cartItem : cartItems) {
+                Product product = cartItem.getCartItemProduct();
+                String imageUrl = "/com/apple/resources/product_images/" + product.getProductImageURL();
+                URL url = getClass().getResource(imageUrl);
+
+                if (url == null) {
+                    String filePath = System.getProperty("user.dir") + "/src" + imageUrl;
+                    File file = new File(filePath);
+                    try {
+                        url = file.toURI().toURL();
+                    } catch (MalformedURLException e) {
+                        System.err.println("Error converting file path to URL: " + e.getMessage());
+                    }
+                }
+
+                System.out.println("URL: " + url);
+
+                ImageIcon imageIcon;
+                try {
+                    BufferedImage image = ImageIO.read(url);
+                    Image scaledImage = image.getScaledInstance(139, 91, Image.SCALE_SMOOTH);
+                    imageIcon = new ImageIcon(scaledImage);
+                } catch (Exception e) {
+                    System.err.println("Error loading image: " + e.getMessage());
+                    imageIcon = new ImageIcon("path/to/placeholder.png");
+                }
+
                 JLabel productImage = new JLabel(imageIcon);
                 productImage.setBounds(85, yOffset, 139, 91);
                 frame.getContentPane().add(productImage);
@@ -69,8 +118,9 @@ public class ShoppingCart {
                 frame.getContentPane().add(productPrice);
 
                 yOffset += 154; // Adjust the offset for the next product
-                total += product.getProductPrice(); // Add the product price to the total
+                total += product.getProductPrice() * cartItem.getCartItemQuantity(); // Add the product price to the total
             }
+
             JLabel lblTotalSstIncluded = new JLabel("Total(6% sst included) :");
             lblTotalSstIncluded.setFont(new Font("Microsoft New Tai Lue", Font.BOLD, 12));
             lblTotalSstIncluded.setBounds(510, 462, 167, 13);
@@ -80,31 +130,20 @@ public class ShoppingCart {
             JLabel TotalPrice = new JLabel(String.format("RM %.2f", total + sst));
             TotalPrice.setFont(new Font("Microsoft New Tai Lue", Font.PLAIN, 12));
             TotalPrice.setBounds(686, 462, 100, 13);
-            frame.getContentPane().add(TotalPrice);)
+            frame.getContentPane().add(TotalPrice);
         } else {
             JLabel emptyCartLabel = new JLabel("Your shopping cart is empty");
             emptyCartLabel.setFont(new Font("Times New Roman", Font.BOLD, 18));
             emptyCartLabel.setBounds(300, 200, 300, 30);
             frame.getContentPane().add(emptyCartLabel);
         }
-
-        frame.setVisible(true);  // Make the frame visible
     }
 
     public static void main(String[] args) {
-        // Create sample products
-     List<Product> products = List.of(
-        //    new Product("Iphone 13", "path/to/image1.jpg", 3199.00),
-       //     new Product("Iphone 14", "path/to/image2.jpg", 4299.00),
-       //     new Product("Iphone 15", "path/to/image3.jpg", 5699.00),
-       //     new Product("Ipad Air 11-inch", "path/to/image4.jpg", 2999.00)
-        );
-
-        new ShoppingCart(products);  // Create and show the frame
+        new ShoppingCart();  // Create and show the frame
     }
 
-	public void setVisible(boolean b) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void setVisible(boolean b) {
+        frame.setVisible(b);
+    }
 }
