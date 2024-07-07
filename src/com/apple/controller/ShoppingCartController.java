@@ -31,7 +31,7 @@ public class ShoppingCartController extends Controller{
     	
         ShoppingCart shoppingCart = new ShoppingCart();
         try{
-            String query = "SELECT * FROM cart WHERE customerId = ?";
+            String query = "SELECT id FROM cart WHERE customerId = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setInt(1, customerId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -61,25 +61,40 @@ public class ShoppingCartController extends Controller{
         return shoppingCart;
     }
 
-    public List<CartItem> getAllCartItembyCartId(int cartId)
-    {
-        List<CartItem> cartItems = new ArrayList<CartItem>();
-        try{
-            String query = "SELECT productId, quantity FROM cart_item WHERE cart_id = ?";
+    public int getCartIdbyCustomerId(int customerId) {
+        int cartId = -1;
+        try {
+            String query = "SELECT id FROM cart WHERE customerId = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setInt(1, customerId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                cartId = resultSet.getInt("id");
+            }
+        } catch (SQLException err) {
+            System.out.println(err.getMessage());
+        }
+        System.out.println("Cart ID for customer " + customerId + ": " + cartId);
+        return cartId;
+    }
+    
+    public List<CartItem> getAllCartItembyCartId(int cartId) {
+        List<CartItem> cartItems = new ArrayList<>();
+        try {
+            String query = "SELECT productId, quantity FROM cart_item WHERE cartId = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setInt(1, cartId);
             ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next())
-            {
+            while (resultSet.next()) {
                 CartItem cartItem = new CartItem();
                 cartItem.setCartItemQuantity(resultSet.getInt("quantity"));
                 cartItem.setCartItemProduct(new ProductController().getProductDetailsbyId(resultSet.getInt("productId")));
                 cartItems.add(cartItem);
             }
-        } catch (SQLException err)
-        {
+        } catch (SQLException err) {
             System.out.println(err.getMessage());
         }
+        System.out.println("Cart items for cart ID " + cartId + ": " + cartItems);
         return cartItems;
     }
 
@@ -125,4 +140,5 @@ public class ShoppingCartController extends Controller{
             System.out.println(err.getMessage());
         }
     }
+    
 }
