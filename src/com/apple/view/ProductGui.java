@@ -15,15 +15,19 @@ import java.net.URL;
 
 public class ProductGui extends JFrame {
     private JFrame frame;
-    private JTextField txtSearch;
     private ProfileGui profileGui;
     private String email;
     private String password;
+    private ProductController controller;
+    private List<Product> currentProducts;
 
     public ProductGui(List<Product> products, JFrame existingFrame, ProfileGui profileGui, String email, String password) {
     	this.profileGui = profileGui != null ? profileGui : new ProfileGui(email, password);
     	this.email = email;
         this.password = password;    	
+        this.controller = new ProductController();
+        controller.connectToDatabase();
+        this.currentProducts = products;
     	
         if (existingFrame != null) {
             frame = existingFrame;
@@ -37,6 +41,12 @@ public class ProductGui extends JFrame {
         }
         frame.getContentPane().setLayout(null);
 
+        initializeGUI();
+    }
+        
+    private void initializeGUI() {
+        frame.getContentPane().removeAll();
+
         JLabel storeName = new JLabel("APPLE SAGA STORE");
         storeName.setFont(new Font("Microsoft New Tai Lue", Font.BOLD, 24));
         storeName.setBounds(71, 39, 239, 45);
@@ -49,37 +59,41 @@ public class ProductGui extends JFrame {
         frame.getContentPane().add(lblProduct);
 
         JButton filterBttn = new JButton("FILTER");
-        filterBttn.setBounds(943, 94, 85, 21);
+        filterBttn.setBounds(909, 95, 85, 21);
         frame.getContentPane().add(filterBttn);
 
         filterBttn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new FilterGui(); // Open the filter page
+                List<String> categories = controller.getAllCategories();
+                new FilterGui(ProductGui.this, categories);
             }
         });
-
-        txtSearch = new JTextField();
-        txtSearch.setText("SEARCH");
-        txtSearch.setBounds(757, 95, 150, 19);
-        frame.getContentPane().add(txtSearch);
-        txtSearch.setColumns(10);
 
         JButton Profile = new JButton("USER PROFILE");
         Profile.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                profileGui.setVisible(true); // Show the existing ProfileGui
-                frame.dispose(); // Close the ProductGui frame
+                profileGui.setVisible(true);
+                frame.dispose();
             }
         });
         Profile.setBounds(844, 54, 150, 21);
         frame.getContentPane().add(Profile);
 
-
-        displayProducts(products);
+        displayProducts(currentProducts);
         frame.revalidate();
         frame.repaint();
         frame.setVisible(true);
     }
+    
+        public void applyFilter(String category) {
+            if (category.equals("All Categories")) {
+                currentProducts = controller.getAllProduct();
+            } else {
+                currentProducts = controller.getAllProductByCategory(category);
+            }
+            
+            initializeGUI();
+        }
 
     private void displayProducts(List<Product> products) {
         int x = 92;
