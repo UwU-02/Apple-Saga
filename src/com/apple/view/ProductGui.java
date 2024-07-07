@@ -1,9 +1,9 @@
-package view;
+package com.apple.view;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import controller.ProductController;
-import model.Product;
+import com.apple.controller.ProductController;
+import com.apple.model.Product;
 import java.util.List;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -152,7 +152,7 @@ public class ProductGui extends JFrame {
             productButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     frame.dispose();
-                    ProductDetailGui detailGui = new ProductDetailGui(product, email, password);
+                    ProductDetailGui detailGui = new ProductDetailGui(product, email, password, productId);
                     detailGui.setVisible(true);
                 }
             });
