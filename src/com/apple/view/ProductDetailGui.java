@@ -1,4 +1,4 @@
-package com.apple.view;
+package view;
 
 import java.awt.EventQueue;
 import javax.imageio.ImageIO;
@@ -9,13 +9,13 @@ import java.net.URL;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import com.apple.controller.ProductController;
-import com.apple.controller.ReviewController;
-import com.apple.controller.ShoppingCartController;
-import com.apple.model.Product;
-import com.apple.model.Review;
-import com.apple.model.ShoppingCart;
-import com.apple.model.UserSession;
+import controller.ProductController;
+import controller.ReviewController;
+import controller.ShoppingCartController;
+import model.Product;
+import model.Review;
+import model.ShoppingCart;
+import model.UserSession;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -142,12 +142,14 @@ public class ProductDetailGui extends JFrame {
         JButton btnNewButton = new JButton("ADD TO CART");
         btnNewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	int customerId = UserSession.getInstance().getCurrentUserId();
+                int customerId = UserSession.getInstance().getCurrentUserId();
                 ShoppingCart cartcontrol = new ShoppingCartController().getShoppingCartDetailbyCustomerId(customerId);
-    			//add to cart (controller function)
-    			new ShoppingCartController().addItemToCart(cartcontrol.getCartId(), product.getProductId());
+                //add to cart (controller function)
+                new ShoppingCartController().addItemToCart(cartcontrol.getCartId(), product.getProductId());
                 JOptionPane.showMessageDialog(ProductDetailGui.this, "Added to cart!");
-                ProductDetailGui frame = new ProductDetailGui(product, imageUrl, imageUrl, cartId);
+                
+                // pass email and password
+                ProductDetailGui frame = new ProductDetailGui(product, customerEmail, customerPassword, cartcontrol.getCartId());
                 frame.setVisible(true);
                 dispose();
             }
