@@ -90,12 +90,12 @@ public class ProductController extends Controller {
             while(rs.next())
             {
                 Product product = new Product();
-                product.setProductId(rs.getInt("p.productId"));
-                product.setProductName(rs.getString("p.productName"));
-                product.setProductPrice(rs.getDouble("p.productPrice"));
-                product.setProductStockQuantity(rs.getInt("p.stockQuantity"));
-                product.setProductColor(rs.getString("p.productColor"));
-                product.setProductImageURL(rs.getString("p.imageURL"));
+                product.setProductId(rs.getInt("productId"));
+                product.setProductName(rs.getString("productName"));
+                product.setProductPrice(rs.getDouble("productPrice"));
+                product.setProductStockQuantity(rs.getInt("stockQuantity"));
+                product.setProductColor(rs.getString("productColour"));
+                product.setProductImageURL(rs.getString("imageURL"));
                 product.setProductCategory(new ProductCategoryController().getProductCategoryById(rs.getInt("p.categoryId")));
                 
                 products.add(product);
@@ -107,6 +107,23 @@ public class ProductController extends Controller {
         return products;
     	
         
+    }
+    
+    public List<String> getAllCategories() {
+        List<String> categories = new ArrayList<>();
+        String sql = "SELECT DISTINCT categoryName FROM product_category";
+        
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                categories.add(rs.getString("categoryName"));
+            }
+        } catch (SQLException err) {
+            System.err.println("Error fetching categories: " + err.getMessage());
+        }
+        
+        return categories;
     }
     
   //get stock quantity
