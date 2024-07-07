@@ -5,10 +5,19 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import controller.CustomerController;
-import controller.ProductController;
-import model.Customer;
-import model.Product;
+
+import com.apple.controller.CustomerController;
+import com.apple.controller.ProductController;
+import com.apple.controller.ShoppingCartController;
+import com.apple.model.CartItem;
+import com.apple.model.Customer;
+import com.apple.model.Product;
+import com.apple.model.ShoppingCart;
+import com.apple.model.UserSession;
+import com.mysql.jdbc.Connection;
+
+import database.MyDatabase;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Image;
@@ -18,6 +27,8 @@ import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
@@ -93,15 +104,59 @@ public class ProfileGui extends JFrame {
 		buttonOrder.setFont(new Font("Microsoft New Tai Lue", Font.PLAIN, 18));
 		buttonOrder.setBounds(224, 367, 498, 39);
 		contentPane.add(buttonOrder);
+		buttonOrder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 Connection conn;
+				try {
+					conn = (Connection) MyDatabase.doConnection();
+					  // Fetch customer data as needed (example)
+	                 Customer customer = new Customer();
+					OrderHistoryGui frame = new OrderHistoryGui(conn, customer,email,password);
+					frame.setVisible(true);
+					dispose();
+				} catch (ClassNotFoundException | SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+               
+			}
+		});
+
 		
 		JButton buttonShopping = new JButton("Shopping Cart");
 		buttonShopping.setFont(new Font("Microsoft New Tai Lue", Font.PLAIN, 18));
 		buttonShopping.setBounds(225, 416, 497, 39);
+		
 		contentPane.add(buttonShopping);
+		buttonShopping.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        dispose();
+		        ShoppingCartController cartController = new ShoppingCartController();
+		        try {
+				cartController.connectToDatabase();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block	
+				e1.printStackTrace();
+			}
+		        int customerId = getCurrentCustomerId();
+		        ShoppingCart cart = cartController.getShoppingCartDetailbyCustomerId(customerId);
+		        List<Product> products = new ArrayList<>();
+		        
+		        if (cart != null && cart.getCartItems() != null) {
+		            for (CartItem item : cart.getCartItems()) {
+		                products.add(item.getCartItemProduct());
+		            }
+		        }
+		        
+		        view.ShoppingCart frame = new view.ShoppingCart(products);
+		        frame.setVisible(true);
+		    }
+		});
 		
 		showCustName = new JLabel("Username ");
 		showCustName.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		showCustName.setBounds(373, 238, 195, 34);
+		showCustName.setBounds(373, 238, 250, 34);
 		contentPane.add(showCustName);
 		
 		showCustEmail = new JLabel(" Email");
@@ -111,7 +166,8 @@ public class ProfileGui extends JFrame {
 		
 		JLabel lblNewLabel_3 = new JLabel("New label");
         try {
-            Image image = ImageIO.read(new File("C:\\Users\\Manni\\Documents\\UNIVERSITY STUDY\\Y2S2 sub\\OOP SANUSI\\PROJECT APPLE\\photos\\profile.png"));
+            Image image = ImageIO.read(new File("C:\\Users\\TUF\\Downloads\\UTeM\\SEM 4\\BITP3113 OBJECT ORIENTED PROGRAMMING\\Project\\src\\resources\\product_images\\profile.png"));
+            //*****use your own location*******
             Image scaledImage = image.getScaledInstance(128, 128, Image.SCALE_SMOOTH);
             lblNewLabel_3.setIcon(new ImageIcon(scaledImage));
         } catch (IOException e) {
@@ -135,6 +191,9 @@ public class ProfileGui extends JFrame {
         contentPane.add(btnShopping);
 		
         updateCustomerDetails(email, password);
-		
+	}
+	
+	private int getCurrentCustomerId() {
+	    return UserSession.getInstance().getCurrentUserId();
 	}
 }
