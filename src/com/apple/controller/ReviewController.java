@@ -26,14 +26,14 @@ public class ReviewController extends Controller {
 		
 		try{
             List<Review> reviews = new ArrayList<Review>();
-            String query = "SELECT * FROM review WHERE productId_fk = ?;";
+            String query = "SELECT * FROM review WHERE productId = ?;";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, productId);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 Review review = new Review();
                 review.setCaseId(rs.getInt("caseId"));
-                review.setReviewProductId(rs.getInt("productId_fk"));
+                review.setReviewProductId(rs.getInt("productId"));
                 review.setReviewDescription(rs.getString("reviewDescription"));
            
                 reviews.add(review);
@@ -49,7 +49,7 @@ public class ReviewController extends Controller {
 	public void addProductReview(int productId, int customerId,  String reviewDescription)
     {
         try{
-            String query = "INSERT INTO review (productId_fk, customerId_fk, reviewDescription) VALUES (?, ?, ?);";
+            String query = "INSERT INTO review (productId, customerId, reviewDescription) VALUES (?, ?, ?);";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, productId);
             ps.setInt(2, customerId);
