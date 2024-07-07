@@ -13,8 +13,8 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-import Controller.CustomerController;
-import Controller.ShoppingOrderController;
+import controller.CustomerController;
+import controller.ShoppingOrderController;
 import database.MyDatabase;
 import model.Customer;
 import model.OrderSummary;
@@ -69,7 +69,6 @@ public class OrderHistoryGui extends JFrame {
     }
 
     private void displayOrderHistory() {
-    	
         List<OrderSummary> orderSummaries = orderController.getOrderSummariesByCustomer(UserSession.getInstance().getCurrentUserId());
         int yPosition = 145;
         System.out.println(UserSession.getInstance().getCurrentUserId());
@@ -80,7 +79,7 @@ public class OrderHistoryGui extends JFrame {
             lblOrderId.setBounds(96, yPosition, 608, 27);
             contentPane.add(lblOrderId);
 
-            JLabel lblOrderTotal = new JLabel("Price : " + summary.getTotalPrice());
+            JLabel lblOrderTotal = new JLabel("Price : " + String.valueOf(summary.getTotalPrice())); // Ensure total price is a string
             lblOrderTotal.setFont(new Font("Times New Roman", Font.BOLD, 12));
             lblOrderTotal.setBounds(96, yPosition + 37, 608, 27);
             contentPane.add(lblOrderTotal);
@@ -93,8 +92,9 @@ public class OrderHistoryGui extends JFrame {
             JButton buttonDetails = new JButton("Details");
             buttonDetails.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    // Implement action for viewing order details
-                    // Example: new OrderDetailsGui(order).setVisible(true);
+                    int orderId = summary.getOrderId(); // Get the order ID from the summary
+                    OrderDetailsGui frame = new OrderDetailsGui(orderId);
+                    frame.setVisible(true);
                 }
             });
             buttonDetails.setFont(new Font("Times New Roman", Font.PLAIN, 16));
@@ -111,14 +111,10 @@ public class OrderHistoryGui extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    // Establish database connection
-                    Connection conn = MyDatabase.doConnection();
-
-                    // Fetch customer data as needed (example)
-                    Customer customer = new Customer();
-
-                    // Initialize and display OrderHistoryGui
-                    OrderHistoryGui frame = new OrderHistoryGui(conn, customer, email, password);
+                    Customer customer = new Customer(); // You need to fetch actual customer data
+                    String email = "example@example.com";
+                    String password = "password";
+                    OrderHistoryGui frame = new OrderHistoryGui(null, customer, email, password); // Pass connection and customer
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
