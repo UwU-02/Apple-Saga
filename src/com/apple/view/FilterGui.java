@@ -1,82 +1,65 @@
 package view;
 
 import javax.swing.*;
-
-import Controller.ProductCategoryController;
-
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import model.ProductCategory;
-
 public class FilterGui extends JFrame {
-    private JTextField txtCategoryName;
-    private JButton btnSearch;
-    private JList<String> listCategories;
-    private DefaultListModel<String> listModel;
+    private JComboBox<String> categoryComboBox;
+    private JButton applyFilterButton;
+    private ProductGui productGui;
 
-    private ProductCategoryController controller;
+    public FilterGui(ProductGui productGui, List<String> categories) {
+        this.productGui = productGui;
+        setTitle("Filter Products");
+        setSize(350, 200);
+        setLayout(new BorderLayout());
+        
+        
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
-    public FilterGui() {
-        // Initialize the controller and connect to the database
-        controller = new ProductCategoryController();
-        controller.connectToDatabase();
+        
+        JLabel titleLabel = new JLabel("Select Category:");
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
-        // Setup the frame
-        setTitle("Product Category Filter");
-        setSize(900, 620);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new BorderLayout());
+        
+        categoryComboBox = new JComboBox<>(categories.toArray(new String[0]));
+        categoryComboBox.insertItemAt("All Categories", 0);
+        categoryComboBox.setSelectedIndex(0);
+        categoryComboBox.setMaximumSize(new Dimension(300, 30));
+        categoryComboBox.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Create the top panel with input and button
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new FlowLayout());
+       
+        applyFilterButton = new JButton("Apply Filter");
+        applyFilterButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        applyFilterButton.setMaximumSize(new Dimension(150, 30));
 
-        JLabel lblCategoryName = new JLabel("Category Name:");
-        txtCategoryName = new JTextField(15);
-        btnSearch = new JButton("Search");
+       
+        mainPanel.add(titleLabel);
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        mainPanel.add(categoryComboBox);
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        mainPanel.add(applyFilterButton);
 
-        topPanel.add(lblCategoryName);
-        topPanel.add(txtCategoryName);
-        topPanel.add(btnSearch);
+        
+        add(mainPanel, BorderLayout.CENTER);
 
-        // Create the list to display categories
-        listModel = new DefaultListModel<>();
-        listCategories = new JList<>(listModel);
-
-        // Add components to the frame
-        getContentPane().add(topPanel, BorderLayout.NORTH);
-        getContentPane().add(new JScrollPane(listCategories), BorderLayout.CENTER);
-
-        // Add button action listener
-        btnSearch.addActionListener(new ActionListener() {
+        applyFilterButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String categoryName = txtCategoryName.getText();
-             //   List<ProductCategory> categories = controller.getProductCategoryById(categoryName);
-         //       updateCategoryList(categories);
+                String selectedCategory = (String) categoryComboBox.getSelectedItem();
+                productGui.applyFilter(selectedCategory);
+                dispose();
             }
         });
 
+        setLocationRelativeTo(null);
         setVisible(true);
-    }
-
-    // Update the JList with new category data
-    private void updateCategoryList(List<ProductCategory> categories) {
-        listModel.clear();
-        for (ProductCategory category : categories) {
-            listModel.addElement(category.getCategoryName());
-        }
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new FilterGui();
-            }
-        });
     }
 }
