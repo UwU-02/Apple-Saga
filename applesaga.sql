@@ -169,18 +169,17 @@ INSERT INTO ORDER_LIST (productId, orderId, productQuantity) VALUES (13, 10, 1);
 INSERT INTO ORDER_LIST (productId, orderId, productQuantity) VALUES (1, 11, 1);
 INSERT INTO ORDER_LIST (productId, orderId, productQuantity) VALUES (2, 11, 1);
 
-CREATE TABLE CART_ITEM (
-  cartId int(5),
-  productId int(5),
-  quantity int(2) DEFAULT 1,
-  PRIMARY KEY (cartId, productId),
-  FOREIGN KEY (productId) REFERENCES PRODUCT (productId)
+CREATE TABLE cart (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    customerId INT NOT NULL
 );
 
-CREATE TABLE CART (
-  id int(5) UNIQUE AUTO_INCREMENT,
-  customerId int(5) REFERENCES CUSTOMER (customerId),
-  PRIMARY KEY (id)
+CREATE TABLE cart_item (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cartId INT NOT NULL,
+    productId INT NOT NULL,
+    quantity INT NOT NULL,
+    FOREIGN KEY (cartId) REFERENCES cart(id)
 );
 
 
