@@ -1,4 +1,3 @@
-
 package com.apple.view;
 
 import java.awt.EventQueue;
@@ -10,13 +9,17 @@ import java.net.URL;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
 import com.apple.controller.ProductController;
 import com.apple.controller.ReviewController;
+import com.apple.controller.ShoppingCartController;
 import com.apple.model.Product;
 import com.apple.model.Review;
+import com.apple.model.ShoppingCart;
+import com.apple.model.UserSession;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -32,6 +35,7 @@ public class ProductDetailGui extends JFrame {
     private static int productId;
     private String customerEmail;
     private String customerPassword;
+	protected int customerId;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -48,7 +52,7 @@ public class ProductDetailGui extends JFrame {
                     String dummyEmail = "test@example.com";
                     String dummyPassword = "testpassword";
 
-                    ProductDetailGui frame = new ProductDetailGui(sampleProduct, dummyEmail, dummyPassword);
+                    ProductDetailGui frame = new ProductDetailGui(sampleProduct, dummyEmail, dummyPassword, productId);
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -57,7 +61,7 @@ public class ProductDetailGui extends JFrame {
         });
     }
 
-    public ProductDetailGui(Product product, String customerEmail, String customerPassword) {
+    public ProductDetailGui(Product product, String customerEmail, String customerPassword, int cartId) {
         this.customerEmail = customerEmail;
         this.customerPassword = customerPassword;
 
@@ -88,7 +92,7 @@ public class ProductDetailGui extends JFrame {
 
         JLabel lblNewLabel_2 = new JLabel(product.getProductName());
         lblNewLabel_2.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblNewLabel_2.setBounds(406, 141, 203, 22);
+        lblNewLabel_2.setBounds(406, 141, 137, 22);
         contentPane.add(lblNewLabel_2);
 
         JLabel lblNewLabel_2_1 = new JLabel("RM " + String.format("%.2f", product.getProductPrice()));
@@ -98,7 +102,7 @@ public class ProductDetailGui extends JFrame {
 
         JLabel lblNewLabel_2_2 = new JLabel(product.getProductColor());
         lblNewLabel_2_2.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblNewLabel_2_2.setBounds(406, 194, 182, 22);
+        lblNewLabel_2_2.setBounds(406, 194, 137, 22);
         contentPane.add(lblNewLabel_2_2);
 
         JLabel lblNewLabel_2_3 = new JLabel("Stock: " + product.getProductStockQuantity());
@@ -106,7 +110,7 @@ public class ProductDetailGui extends JFrame {
         lblNewLabel_2_3.setBounds(406, 215, 137, 22);
         contentPane.add(lblNewLabel_2_3);
 
-        String imageUrl = "/resource/product_images/" + product.getProductImageURL();
+        String imageUrl = "/com/apple/resources/product_images/" + product.getProductImageURL();
         URL url = getClass().getResource(imageUrl);
 
         if (url == null) {
@@ -138,7 +142,14 @@ public class ProductDetailGui extends JFrame {
         JButton btnNewButton = new JButton("ADD TO CART");
         btnNewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new ShoppingCart(null);
+            	int customerId = UserSession.getInstance().getCurrentUserId();
+                ShoppingCart cartcontrol = new ShoppingCartController().getShoppingCartDetailbyCustomerId(customerId);
+    			//add to cart (controller function)
+    			new ShoppingCartController().addItemToCart(cartcontrol.getCartId(), product.getProductId());
+                JOptionPane.showMessageDialog(ProductDetailGui.this, "Added to cart!");
+                ProductDetailGui frame = new ProductDetailGui(product, imageUrl, imageUrl, cartId);
+                frame.setVisible(true);
+                dispose();
             }
         });
         btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 16));
