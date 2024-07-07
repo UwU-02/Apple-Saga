@@ -100,7 +100,7 @@ public class ShoppingCartController extends Controller{
                 preparedStatement2.executeUpdate();
             } else if (!resultSet.next())
             {
-                String query3 = "INSERT INTO cart_item (cartId_fk, productId_fk, quantity) VALUES (?, ?, 1)";
+                String query3 = "INSERT INTO cart_item (cartId, productId, quantity) VALUES (?, ?, 1)";
                 PreparedStatement preparedStatement3 = conn.prepareStatement(query3);
                 preparedStatement3.setInt(1, cartId);
                 preparedStatement3.setInt(2, productId);
@@ -115,7 +115,7 @@ public class ShoppingCartController extends Controller{
     public void removeItemFromCart(int cartId, int productId)
     {
         try{
-            String query = "DELETE FROM cart_item WHERE cartId_fk = ? AND productId_fk = ?";
+            String query = "DELETE FROM cart_item WHERE cartId = ? AND productId = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setInt(1, cartId);
             preparedStatement.setInt(2, productId);
