@@ -1,11 +1,11 @@
-package com.apple.view;
+package view;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import com.apple.controller.ShoppingCartController;
-import com.apple.model.CartItem;
-import com.apple.model.Product;
-import com.apple.model.UserSession;
+import controller.ShoppingCartController;
+import model.CartItem;
+import model.Product;
+import model.UserSession;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -18,8 +18,13 @@ import java.util.List;
 
 public class ShoppingCart {
     private JFrame frame;
+    private String email;
+    private String password;
 
-    public ShoppingCart() {
+    public ShoppingCart(String email, String password) {
+    	this.email = email;
+        this.password = password;
+        
         frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // Make sure to close the application
         frame.setSize(900, 600);  // Set the frame size
@@ -34,7 +39,7 @@ public class ShoppingCart {
         backBttn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
-                ProfileGui profileFrame = new ProfileGui(null, null);
+                ProfileGui profileFrame = new ProfileGui(email, password);
                 profileFrame.setVisible(true);
             }
         });
@@ -140,7 +145,7 @@ public class ShoppingCart {
     }
 
     public static void main(String[] args) {
-        new ShoppingCart();  // Create and show the frame
+    	 new ShoppingCart("example@email.com", "password");  // Create and show the frame
     }
 
     public void setVisible(boolean b) {
