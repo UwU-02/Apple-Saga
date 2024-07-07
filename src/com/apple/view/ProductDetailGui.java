@@ -92,7 +92,7 @@ public class ProductDetailGui extends JFrame {
 
         JLabel lblNewLabel_2 = new JLabel(product.getProductName());
         lblNewLabel_2.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblNewLabel_2.setBounds(406, 141, 137, 22);
+        lblNewLabel_2.setBounds(406, 141, 203, 22);
         contentPane.add(lblNewLabel_2);
 
         JLabel lblNewLabel_2_1 = new JLabel("RM " + String.format("%.2f", product.getProductPrice()));
@@ -102,7 +102,7 @@ public class ProductDetailGui extends JFrame {
 
         JLabel lblNewLabel_2_2 = new JLabel(product.getProductColor());
         lblNewLabel_2_2.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblNewLabel_2_2.setBounds(406, 194, 137, 22);
+        lblNewLabel_2_2.setBounds(406, 194, 182, 22);
         contentPane.add(lblNewLabel_2_2);
 
         JLabel lblNewLabel_2_3 = new JLabel("Stock: " + product.getProductStockQuantity());
