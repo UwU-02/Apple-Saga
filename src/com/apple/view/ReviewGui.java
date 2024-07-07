@@ -1,15 +1,30 @@
-package view;
+
+package com.apple.view;
 
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import com.apple.model.Product;
+import com.apple.controller.ProductController;
+import com.apple.controller.ReviewController;
+
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Image;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class ReviewGui extends JFrame {
@@ -17,16 +32,31 @@ public class ReviewGui extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textField;
+	private static int productId;
+    private String customerEmail;
+    private String customerPassword;
 
-	/**
-	 * Launch the application.
-	 */
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ReviewGui frame = new ReviewGui();
-					frame.setVisible(true);
+					Product sampleProduct = new Product();
+                    sampleProduct.setProductId(1);
+                    sampleProduct.setProductName("Sample Product");
+                    sampleProduct.setProductPrice(999.99);
+                    sampleProduct.setProductColor("Black");
+                    sampleProduct.setProductStockQuantity(10);
+                    sampleProduct.setProductImageURL("path/to/sample/image.jpg");
+
+                    String dummyEmail = "test@example.com";
+                    String dummyPassword = "testpassword";
+
+                    ProductDetailGui frame = new ProductDetailGui(sampleProduct, dummyEmail, dummyPassword);
+                    frame.setVisible(true);
+					
+					//ReviewGui frame = new ReviewGui();
+					//frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -34,10 +64,11 @@ public class ReviewGui extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
-	public ReviewGui() {
+	
+	public ReviewGui(Product product, String customerEmail, String customerPassword) {
+		this.customerEmail = customerEmail;
+        this.customerPassword = customerPassword;
+        
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 960, 600);
 		contentPane = new JPanel();
@@ -54,8 +85,9 @@ public class ReviewGui extends JFrame {
 		JButton buttonBack = new JButton("Back");
 		buttonBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ProductDetailGui frame = new ProductDetailGui();
-				frame.setVisible(true);
+				dispose();
+				 new ProductDetailGui(product, customerEmail, customerPassword).setVisible(true); // Navigate to ProductDetailGui
+               
 			}
 		});
 		buttonBack.setFont(new Font("Times New Roman", Font.PLAIN, 16));
@@ -67,39 +99,50 @@ public class ReviewGui extends JFrame {
 		lblNewLabel_1_1.setBounds(419, 38, 252, 39);
 		contentPane.add(lblNewLabel_1_1);
 		
-		JLabel lblNewLabel_1 = new JLabel("Image");
-		lblNewLabel_1.setBounds(61, 207, 45, 13);
-		contentPane.add(lblNewLabel_1);
-
-		ImageIcon imageIcon = new ImageIcon(product.getProductImageURL());
-        JButton productImage = new JButton(imageIcon);
-        productImage.setBounds(282, 161, 150, 117);
-        frame.getContentPane().add(productImage);
-        productImage.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-              //  new ProductDetailGui(productId); // Open the product details page 
-            }
-        });
 		
-		JLabel lblNewLabel_2 = new JLabel("Airpods Pro");
+		String imageUrl = "/resource/product_images/" + product.getProductImageURL();
+        URL url = getClass().getResource(imageUrl);
+
+        if (url == null) {
+            String filePath = System.getProperty("user.dir") + "/src" + imageUrl;
+            File file = new File(filePath);
+            try {
+                url = file.toURI().toURL();
+            } catch (MalformedURLException e) {
+                System.err.println("Error converting file path to URL: " + e.getMessage());
+            }
+        }
+
+        System.out.println("URL: " + url);
+
+        ImageIcon imageIcon;
+        try {
+            BufferedImage image = ImageIO.read(url);
+            Image scaledImage = image.getScaledInstance(252, 153, Image.SCALE_SMOOTH);
+            imageIcon = new ImageIcon(scaledImage);
+        } catch (Exception e) {
+            System.err.println("Error loading image: " + e.getMessage());
+            imageIcon = new ImageIcon("path/to/placeholder.png");
+        }
+
+        JButton productImage1 = new JButton(imageIcon);
+        productImage1.setBounds(78, 141, 252, 153);
+        contentPane.add(productImage1);
+		
+		JLabel lblNewLabel_2 = new JLabel(product.getProductName());
 		lblNewLabel_2.setFont(new Font("Segoe UI", Font.BOLD, 14));
 		lblNewLabel_2.setBounds(393, 152, 137, 22);
 		contentPane.add(lblNewLabel_2);
 		
-		JLabel lblNewLabel_2_1 = new JLabel("RM 999");
+		JLabel lblNewLabel_2_1 = new JLabel("RM " + String.format("%.2f", product.getProductPrice()));
 		lblNewLabel_2_1.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		lblNewLabel_2_1.setBounds(393, 177, 137, 22);
 		contentPane.add(lblNewLabel_2_1);
 		
-		JLabel lblNewLabel_2_2 = new JLabel("White");
+		JLabel lblNewLabel_2_2 = new JLabel(product.getProductColor());
 		lblNewLabel_2_2.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		lblNewLabel_2_2.setBounds(393, 198, 137, 22);
 		contentPane.add(lblNewLabel_2_2);
-		
-		JLabel lblNewLabel_3 = new JLabel("pcs ");
-		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblNewLabel_3.setBounds(731, 152, 45, 22);
-		contentPane.add(lblNewLabel_3);
 		
 		JLabel lblNewLabel_4 = new JLabel("Write your feedback : ");
 		lblNewLabel_4.setFont(new Font("Times New Roman", Font.PLAIN, 16));
@@ -107,15 +150,16 @@ public class ReviewGui extends JFrame {
 		contentPane.add(lblNewLabel_4);
 		
 		textField = new JTextField();
-		textField.setBounds(61, 392, 661, 34);
+		textField.setBounds(61, 392, 680, 34);
 		contentPane.add(textField);
 		textField.setColumns(10);
 		
 		JButton buttonSubmit = new JButton("Submit");
 		buttonSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ProductDetailGui frame = new ProductDetailGui();
+				ProductDetailGui frame = new ProductDetailGui(product, customerEmail, customerPassword);
 				frame.setVisible(true);
+				dispose();
 			}
 		});
 		buttonSubmit.setFont(new Font("Times New Roman", Font.PLAIN, 16));
