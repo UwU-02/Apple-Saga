@@ -1,23 +1,27 @@
-package com.apple.controller;
-
+package Controller;
 
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import java.util.List;
 import java.util.ArrayList;
+import model.ShoppingOrder;
+import model.CartItem;
+import model.Customer;
+import model.OrderSummary;
+import model.Product;
 
-import com.apple.model.ShoppingOrder;
-import com.apple.model.CartItem;
-import com.apple.model.Product;
+public class ShoppingOrderController extends Controller {
+    public ShoppingOrderController() {
+        connectToDatabase();
+    }
 
-public class ShoppingOrderController  extends Controller {
     public void connectToDatabase() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/penpalsoop", "root", "");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/applesaga", "root", "");
+            System.out.println("Database connected!");
         } catch (ClassNotFoundException | SQLException err) {
             System.out.println(err.getMessage());
         }
@@ -78,4 +82,41 @@ public class ShoppingOrderController  extends Controller {
         return cartItems;
     }
 
+    public List<OrderSummary> getOrderSummariesByCustomer(int customerId) {
+        List<OrderSummary> orderSummaries = new ArrayList<>();
+        try {
+            String query = "SELECT " +
+                           "so.orderId, " +
+                           "SUM(p.productPrice * ol.productQuantity) AS totalPrice, " +
+                           "d.deliveryStatus " +
+                           "FROM " +
+                           "SHOPPING_ORDER so " +
+                           "JOIN ORDER_LIST ol ON so.orderId = ol.orderId " +
+                           "JOIN PRODUCT p ON ol.productId = p.productId " +
+                           "JOIN DELIVERY d ON so.orderId = d.orderId " +
+                           "WHERE " +
+                           "so.customerId = ? " +
+                           "GROUP BY " +
+                           "so.orderId, d.deliveryStatus";
+            
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, customerId);
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                int orderId = rs.getInt("orderId");
+                double totalPrice = rs.getDouble("totalPrice");
+                String deliveryStatus = rs.getString("deliveryStatus");
+                
+                orderSummaries.add(new OrderSummary(orderId, totalPrice, deliveryStatus));
+                System.out.println("Order ID: " + orderId + ", Total Price: " + totalPrice + ", Delivery Status: " + deliveryStatus);
+            }
+            
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orderSummaries;
+    }
 }
