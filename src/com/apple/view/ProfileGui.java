@@ -1,4 +1,4 @@
-package com.apple.view;
+package view;
 
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -6,17 +6,17 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import com.apple.controller.CustomerController;
-import com.apple.controller.ProductController;
-import com.apple.controller.ShoppingCartController;
-import com.apple.model.CartItem;
-import com.apple.model.Customer;
-import com.apple.model.Product;
-import com.apple.model.ShoppingCart;
-import com.apple.model.UserSession;
+import controller.CustomerController;
+import controller.ProductController;
+import controller.ShoppingCartController;
+import model.CartItem;
+import model.Customer;
+import model.Product;
+import model.ShoppingCart;
+import model.UserSession;
 import com.mysql.jdbc.Connection;
 
-import com.database.myDatabase;
+import database.MyDatabase;
 
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -108,7 +108,7 @@ public class ProfileGui extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				 Connection conn;
 				try {
-					conn = (Connection) myDatabase.doConnection();
+					conn = (Connection) MyDatabase.doConnection();
 					  // Fetch customer data as needed (example)
 	                 Customer customer = new Customer();
 					OrderHistoryGui frame = new OrderHistoryGui(conn, customer,email,password);
@@ -134,11 +134,10 @@ public class ProfileGui extends JFrame {
 		        dispose();
 		        ShoppingCartController cartController = new ShoppingCartController();
 		        try {
-				cartController.connectToDatabase();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block	
-				e1.printStackTrace();
-			}
+		            cartController.connectToDatabase();
+		        } catch (SQLException e1) {
+		            e1.printStackTrace();
+		        }
 		        int customerId = getCurrentCustomerId();
 		        ShoppingCart cart = cartController.getShoppingCartDetailbyCustomerId(customerId);
 		        List<Product> products = new ArrayList<>();
@@ -149,7 +148,7 @@ public class ProfileGui extends JFrame {
 		            }
 		        }
 		        
-		        com.apple.view.ShoppingCart frame = new com.apple.view.ShoppingCart();
+		        view.ShoppingCart frame = new view.ShoppingCart(email, password);
 		        frame.setVisible(true);
 		    }
 		});
@@ -166,7 +165,7 @@ public class ProfileGui extends JFrame {
 		
 		JLabel lblNewLabel_3 = new JLabel("New label");
         try {
-            Image image = ImageIO.read(new File("C:\\Users\\User\\Downloads\\rsc\\profile.png"));
+            Image image = ImageIO.read(new File("C:\\Users\\Manni\\Documents\\UNIVERSITY STUDY\\Y2S2 sub\\OOP SANUSI\\PROJECT APPLE\\src\\com\\apple\\resources\\product_images\\profile.png"));
             //*****use your own location*******
             Image scaledImage = image.getScaledInstance(128, 128, Image.SCALE_SMOOTH);
             lblNewLabel_3.setIcon(new ImageIcon(scaledImage));
