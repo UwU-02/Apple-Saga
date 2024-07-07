@@ -1,4 +1,5 @@
-package view;
+
+package com.apple.view;
 
 import java.awt.EventQueue;
 import javax.imageio.ImageIO;
@@ -9,10 +10,12 @@ import java.net.URL;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
 import com.apple.controller.ProductController;
 import com.apple.controller.ReviewController;
 import com.apple.model.Product;
 import com.apple.model.Review;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Image;
@@ -85,7 +88,7 @@ public class ProductDetailGui extends JFrame {
 
         JLabel lblNewLabel_2 = new JLabel(product.getProductName());
         lblNewLabel_2.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblNewLabel_2.setBounds(406, 141, 137, 22);
+        lblNewLabel_2.setBounds(406, 141, 203, 22);
         contentPane.add(lblNewLabel_2);
 
         JLabel lblNewLabel_2_1 = new JLabel("RM " + String.format("%.2f", product.getProductPrice()));
@@ -95,7 +98,7 @@ public class ProductDetailGui extends JFrame {
 
         JLabel lblNewLabel_2_2 = new JLabel(product.getProductColor());
         lblNewLabel_2_2.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblNewLabel_2_2.setBounds(406, 194, 137, 22);
+        lblNewLabel_2_2.setBounds(406, 194, 182, 22);
         contentPane.add(lblNewLabel_2_2);
 
         JLabel lblNewLabel_2_3 = new JLabel("Stock: " + product.getProductStockQuantity());
@@ -103,7 +106,7 @@ public class ProductDetailGui extends JFrame {
         lblNewLabel_2_3.setBounds(406, 215, 137, 22);
         contentPane.add(lblNewLabel_2_3);
 
-        String imageUrl = "/resources/product_images/" + product.getProductImageURL();
+        String imageUrl = "/resource/product_images/" + product.getProductImageURL();
         URL url = getClass().getResource(imageUrl);
 
         if (url == null) {
