@@ -1,24 +1,18 @@
 package view;
 
-import java.awt.EventQueue;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.border.LineBorder;
 
-import controller.CustomerController;
 import controller.ShoppingOrderController;
-import database.MyDatabase;
 import model.Customer;
 import model.OrderSummary;
-import model.ShoppingOrder;
 import model.UserSession;
 
 public class OrderHistoryGui extends JFrame {
@@ -31,90 +25,126 @@ public class OrderHistoryGui extends JFrame {
     private static String password;
 
     public OrderHistoryGui(Connection conn, Customer customer, String email, String password) {
-        this.orderController = new ShoppingOrderController(); // Ensure connection is initialized inside the controller
+        this.orderController = new ShoppingOrderController();
         this.customer = customer;
         this.email = email;
         this.password = password;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 960, 600);
-        contentPane = new JPanel();
+        contentPane = new JPanel(new BorderLayout());
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
-        contentPane.setLayout(null);
+
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setPreferredSize(new Dimension(960, 100));
 
         JLabel lblStoreName = new JLabel("APPLE SAGA STORE");
         lblStoreName.setFont(new Font("Microsoft New Tai Lue", Font.BOLD, 18));
-        lblStoreName.setBounds(29, 34, 185, 22);
-        contentPane.add(lblStoreName);
+        headerPanel.add(lblStoreName, BorderLayout.WEST);
 
         JButton buttonBack = new JButton("Back");
         buttonBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ProfileGui frame = new ProfileGui(email, password);
                 frame.setVisible(true);
-                dispose(); // Close current frame
+                dispose();
             }
         });
-        buttonBack.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        buttonBack.setBounds(29, 66, 85, 34);
-        contentPane.add(buttonBack);
+        buttonBack.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+        buttonBack.setPreferredSize(new Dimension(60, 25));
+        JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        backButtonPanel.add(buttonBack);
+        headerPanel.add(backButtonPanel, BorderLayout.NORTH);
 
         JLabel lblOrderHistory = new JLabel("Order History");
         lblOrderHistory.setFont(new Font("Tahoma", Font.BOLD, 32));
-        lblOrderHistory.setBounds(388, 34, 226, 39);
-        contentPane.add(lblOrderHistory);
+        lblOrderHistory.setHorizontalAlignment(SwingConstants.CENTER);
+        headerPanel.add(lblOrderHistory, BorderLayout.CENTER);
 
-        displayOrderHistory();
+        contentPane.add(headerPanel, BorderLayout.NORTH);
+
+        JPanel ordersPanel = new JPanel();
+        ordersPanel.setLayout(new BoxLayout(ordersPanel, BoxLayout.Y_AXIS));
+        
+        JScrollPane scrollPane = new JScrollPane(ordersPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        
+        contentPane.add(scrollPane, BorderLayout.CENTER);
+
+        displayOrderHistory(ordersPanel);
     }
 
-    private void displayOrderHistory() {
+    private void displayOrderHistory(JPanel ordersPanel) {
         List<OrderSummary> orderSummaries = orderController.getOrderSummariesByCustomer(UserSession.getInstance().getCurrentUserId());
-        int yPosition = 145;
         System.out.println(UserSession.getInstance().getCurrentUserId());
         System.out.println("Number of orders: " + orderSummaries.size());
+
+        if (orderSummaries.isEmpty()) {
+            JLabel noOrderHistoryLabel = new JLabel("You have no order history.");
+            noOrderHistoryLabel.setFont(new Font("Times New Roman", Font.BOLD, 18));
+            noOrderHistoryLabel.setForeground(Color.GRAY); // Set the text color to gray
+
+            ordersPanel.setLayout(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.anchor = GridBagConstraints.CENTER;
+            gbc.weightx = 1;
+            gbc.weighty = 1;
+            ordersPanel.add(noOrderHistoryLabel, gbc);
+        } else {
         for (OrderSummary summary : orderSummaries) {
+            JPanel orderPanel = new JPanel(new BorderLayout());
+            orderPanel.setBorder(new LineBorder(Color.LIGHT_GRAY, 1, true));
+            orderPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
+            orderPanel.setPreferredSize(new Dimension(900, 120));
+
+            JPanel detailsPanel = new JPanel(new GridLayout(3, 1, 5, 5));
+            detailsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
             JLabel lblOrderId = new JLabel("Order ID : " + summary.getOrderId());
             lblOrderId.setFont(new Font("Times New Roman", Font.BOLD, 12));
-            lblOrderId.setBounds(96, yPosition, 608, 27);
-            contentPane.add(lblOrderId);
+            detailsPanel.add(lblOrderId);
 
-            JLabel lblOrderTotal = new JLabel("Price : " + String.valueOf(summary.getTotalPrice())); // Ensure total price is a string
+            JLabel lblOrderTotal = new JLabel("Price : RM " + String.format("%.2f", summary.getTotalPrice()));
             lblOrderTotal.setFont(new Font("Times New Roman", Font.BOLD, 12));
-            lblOrderTotal.setBounds(96, yPosition + 37, 608, 27);
-            contentPane.add(lblOrderTotal);
+            detailsPanel.add(lblOrderTotal);
 
             JLabel lblOrderStatus = new JLabel("Status: " + summary.getDeliveryStatus());
             lblOrderStatus.setFont(new Font("Times New Roman", Font.BOLD, 12));
-            lblOrderStatus.setBounds(96, yPosition + 74, 608, 27);
-            contentPane.add(lblOrderStatus);
+            detailsPanel.add(lblOrderStatus);
+
+            orderPanel.add(detailsPanel, BorderLayout.CENTER);
 
             JButton buttonDetails = new JButton("Details");
             buttonDetails.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    int orderId = summary.getOrderId(); // Get the order ID from the summary
+                    int orderId = summary.getOrderId();
                     OrderDetailsGui frame = new OrderDetailsGui(orderId);
                     frame.setVisible(true);
                 }
             });
             buttonDetails.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-            buttonDetails.setBounds(760, yPosition + 37, 103, 34);
-            contentPane.add(buttonDetails);
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            buttonPanel.add(buttonDetails);
+            orderPanel.add(buttonPanel, BorderLayout.EAST);
 
-            yPosition += 111; // Adjust position for the next order
+            ordersPanel.add(orderPanel);
+            ordersPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
-        contentPane.revalidate();
-        contentPane.repaint();
+        }
+        ordersPanel.revalidate();
+        ordersPanel.repaint();
     }
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    Customer customer = new Customer(); // You need to fetch actual customer data
+                    Customer customer = new Customer();
                     String email = "example@example.com";
                     String password = "password";
-                    OrderHistoryGui frame = new OrderHistoryGui(null, customer, email, password); // Pass connection and customer
+                    OrderHistoryGui frame = new OrderHistoryGui(null, customer, email, password);
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
