@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 
 import java.sql.DriverManager;
@@ -45,6 +45,29 @@ public class CustomerController extends Controller{
         return customer;
     }
 
+    public Customer getCustomerDetailsById(int customerId) {
+        Customer customer = null;
+        try {
+            connectToDatabase(); // Ensure database connection
+            String sql = "SELECT customerId, customerName, customerEmail, customerContact, customerAddress, customerPassword FROM CUSTOMER WHERE customerId = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, customerId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                customer = new Customer();
+                customer.setCustomerId(rs.getInt("customerId"));
+                customer.setCustomerName(rs.getString("customerName"));
+                customer.setCustomerEmail(rs.getString("customerEmail"));
+                customer.setCustomerContact(rs.getString("customerContact"));
+                customer.setCustomerAddress(rs.getString("customerAddress"));
+                customer.setCustomerPassword(rs.getString("customerPassword"));
+            }
+        } catch (SQLException err) {
+            System.out.println(err.getMessage());
+        }
+        return customer;
+    }
+    
     public void updateCustomerDetail(Customer customer) {
         try {
             String sql = "UPDATE CUSTOMER SET customerName = ?, customerEmail = ?, customerContact = ?, customerAddress = ?, customerPassword = ? WHERE customerId = ?";
