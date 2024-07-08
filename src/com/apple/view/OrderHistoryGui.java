@@ -40,7 +40,8 @@ public class OrderHistoryGui extends JFrame {
         headerPanel.setPreferredSize(new Dimension(960, 100));
 
         JLabel lblStoreName = new JLabel("APPLE SAGA STORE");
-        lblStoreName.setFont(new Font("Microsoft New Tai Lue", Font.BOLD, 18));
+        lblStoreName.setFont(new Font("Microsoft New Tai Lue", Font.BOLD, 24));
+        lblStoreName.setBounds(71, 39, 239, 45);
         headerPanel.add(lblStoreName, BorderLayout.WEST);
 
         JButton buttonBack = new JButton("Back");
@@ -58,7 +59,7 @@ public class OrderHistoryGui extends JFrame {
         headerPanel.add(backButtonPanel, BorderLayout.NORTH);
 
         JLabel lblOrderHistory = new JLabel("Order History");
-        lblOrderHistory.setFont(new Font("Tahoma", Font.BOLD, 32));
+        lblOrderHistory.setFont(new Font("Tahoma", Font.BOLD, 20));
         lblOrderHistory.setHorizontalAlignment(SwingConstants.CENTER);
         headerPanel.add(lblOrderHistory, BorderLayout.CENTER);
 
