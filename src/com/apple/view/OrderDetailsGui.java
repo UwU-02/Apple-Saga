@@ -60,8 +60,7 @@ public class OrderDetailsGui extends JFrame {
 
         // Main Content Panel
         JPanel mainPanel = new JPanel(new BorderLayout());
-        JScrollPane scrollPane = new JScrollPane(mainPanel);
-        add(scrollPane, BorderLayout.CENTER);
+        add(mainPanel, BorderLayout.CENTER);
 
         // Fetch order details
         ShoppingOrder shoppingOrder = orderController.getCompleteOrderDetails(orderId);
@@ -88,6 +87,7 @@ public class OrderDetailsGui extends JFrame {
         
         for (CartItem item : shoppingOrder.getCartItems()) {
             JPanel itemPanel = new JPanel(new BorderLayout(10, 5));
+            itemPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
             
             // Load and display product image
             String imageUrl = "/com/apple/resources/product_images/" + item.getCartItemProduct().getProductImageURL();
@@ -125,7 +125,12 @@ public class OrderDetailsGui extends JFrame {
             itemsPanel.add(itemPanel);
             itemsPanel.add(Box.createVerticalStrut(10));
         }
-        mainPanel.add(itemsPanel, BorderLayout.CENTER);
+
+        // Wrap itemsPanel in a JScrollPane
+        JScrollPane itemsScrollPane = new JScrollPane(itemsPanel);
+        itemsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        itemsScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        mainPanel.add(itemsScrollPane, BorderLayout.CENTER);
 
         // Total Price Panel
         JPanel totalPricePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
