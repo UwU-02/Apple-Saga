@@ -69,7 +69,7 @@ public class ShoppingCartGui {
 
         JLabel shoppingCartLabel = new JLabel("Shopping Cart");
         shoppingCartLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        shoppingCartLabel.setFont(new Font("Serif", Font.PLAIN, 20));
+        shoppingCartLabel.setFont(new Font("Tahoma", Font.BOLD, 20)); // Change to bold font
         shoppingCartLabel.setBounds(317, 78, 254, 45);
         frame.getContentPane().add(shoppingCartLabel);
 
