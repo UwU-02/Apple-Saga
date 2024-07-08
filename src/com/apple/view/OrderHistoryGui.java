@@ -52,8 +52,8 @@ public class OrderHistoryGui extends JFrame {
                 dispose();
             }
         });
-        buttonBack.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-        buttonBack.setPreferredSize(new Dimension(60, 25));
+        buttonBack.setFont(new Font("SansSerif", Font.PLAIN, 15));
+        buttonBack.setPreferredSize(new Dimension(80, 25));
         JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         backButtonPanel.add(buttonBack);
         headerPanel.add(backButtonPanel, BorderLayout.NORTH);
