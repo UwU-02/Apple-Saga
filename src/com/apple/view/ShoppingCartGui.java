@@ -8,6 +8,7 @@ import model.Product;
 import model.UserSession;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
@@ -19,7 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-public class ShoppingCart {
+public class ShoppingCartGui {
 	private JPanel productPanel;
     private JFrame frame;
     private String email;
@@ -27,7 +28,7 @@ public class ShoppingCart {
     private double total = 0.0;
     private JLabel TotalPrice;
 
-    public ShoppingCart(String email, String password) {
+    public ShoppingCartGui(String email, String password) {
     	this.email = email;
         this.password = password;
         productPanel = new JPanel();
@@ -171,6 +172,26 @@ public class ShoppingCart {
                 subtotalLabel.setBounds(480, 40, 180, 20);
                 itemPanel.add(subtotalLabel);
 
+                JButton decreaseButton = new JButton("Remove One");
+                decreaseButton.setBounds(480, 70, 120, 25);
+                decreaseButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        cartController.decreaseItemQuantity(cartId, product.getProductId());
+                        refreshCart();
+                    }
+                });
+                itemPanel.add(decreaseButton);
+
+                JButton addOneMoreButton = new JButton("Add One More");
+                addOneMoreButton.setBounds(590, 70, 120, 25);
+                addOneMoreButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        cartController.addItemToCart(cartId, product.getProductId());
+                        refreshCart();
+                    }
+                });
+                itemPanel.add(addOneMoreButton);
+
                 productPanel.add(itemPanel);
                 productPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
@@ -181,15 +202,34 @@ public class ShoppingCart {
             
             
         } else {
-        	JLabel emptyCartLabel = new JLabel("Your shopping cart is empty");
+        	JLabel emptyCartLabel = new JLabel("Your shopping cart is empty", SwingConstants.CENTER);
             emptyCartLabel.setFont(new Font("Times New Roman", Font.BOLD, 18));
-            emptyCartLabel.setBounds(0, 0, 300, 30);
+            emptyCartLabel.setForeground(Color.LIGHT_GRAY);
+            emptyCartLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            
+            // Add some vertical spacing
+            productPanel.add(Box.createVerticalGlue());
             productPanel.add(emptyCartLabel);
+            productPanel.add(Box.createVerticalGlue());
+            
+            total = 0.0;
         }
+        
+        TotalPrice.setText(String.format("RM %.2f", total));
+        
+        productPanel.revalidate();
+        productPanel.repaint();
+    }
+    
+    private void refreshCart() {
+        productPanel.removeAll();
+        displayCartItems();
+        productPanel.revalidate();
+        productPanel.repaint();
     }
 
     public static void main(String[] args) {
-    	 new ShoppingCart("example@email.com", "password");  // Create and show the frame
+    	 new ShoppingCartGui("example@email.com", "password");  // Create and show the frame
     }
 
     public void setVisible(boolean b) {
