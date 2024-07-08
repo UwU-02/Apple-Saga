@@ -1,4 +1,4 @@
-package com.apple.controller;
+package controller;
 
 import java.sql.DriverManager;
 import java.sql.Connection;
@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
 
-import com.apple.model.*;
+import model.*;
 
 public class ShoppingCartController extends Controller{
 
@@ -17,7 +17,7 @@ public class ShoppingCartController extends Controller{
     {
     	conn.setAutoCommit(false);
     	try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/applesaga", "root", "");
         } catch (ClassNotFoundException | SQLException err)
         {
@@ -98,45 +98,63 @@ public class ShoppingCartController extends Controller{
         return cartItems;
     }
 
-    public void addItemToCart(int cartId, int productId)
-    {
-        try{
-            String query = "SELECT * FROM cart_item WHERE cartId = ? AND productId = ?";
+    public void addItemToCart(int cartId, int productId) {
+        try {
+            String query = "UPDATE cart_item SET quantity = quantity + 1 WHERE cartId = ? AND productId = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setInt(1, cartId);
             preparedStatement.setInt(2, productId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next())
-            {
-                String query2 = "UPDATE cart_item SET quantity = quantity+1 WHERE cartId = ? AND productId = ?";
-                PreparedStatement preparedStatement2 = conn.prepareStatement(query2);
-                preparedStatement2.setInt(1, cartId);
-                preparedStatement2.setInt(2, productId);
-                preparedStatement2.executeUpdate();
-            } else if (!resultSet.next())
-            {
-                String query3 = "INSERT INTO cart_item (cartId, productId, quantity) VALUES (?, ?, 1)";
-                PreparedStatement preparedStatement3 = conn.prepareStatement(query3);
-                preparedStatement3.setInt(1, cartId);
-                preparedStatement3.setInt(2, productId);
-                preparedStatement3.executeUpdate();
+            int rowsAffected = preparedStatement.executeUpdate();
+            
+            if (rowsAffected == 0) {
+                // If the item doesn't exist in the cart, insert it
+                String insertQuery = "INSERT INTO cart_item (cartId, productId, quantity) VALUES (?, ?, 1)";
+                PreparedStatement insertStatement = conn.prepareStatement(insertQuery);
+                insertStatement.setInt(1, cartId);
+                insertStatement.setInt(2, productId);
+                insertStatement.executeUpdate();
             }
-        } catch (SQLException err)
-        {
+        } catch (SQLException err) {
             System.out.println(err.getMessage());
         }
     }
 
-    public void removeItemFromCart(int cartId, int productId)
-    {
-        try{
+    public void removeItemFromCart(int cartId, int productId) {
+        try {
             String query = "DELETE FROM cart_item WHERE cartId = ? AND productId = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setInt(1, cartId);
             preparedStatement.setInt(2, productId);
             preparedStatement.executeUpdate();
-        } catch (SQLException err)
-        {
+        } catch (SQLException err) {
+            System.out.println(err.getMessage());
+        }
+    }
+    
+    public void decreaseItemQuantity(int cartId, int productId) {
+        try {
+            // First, get the current quantity
+            String getQuantityQuery = "SELECT quantity FROM cart_item WHERE cartId = ? AND productId = ?";
+            PreparedStatement getQuantityStmt = conn.prepareStatement(getQuantityQuery);
+            getQuantityStmt.setInt(1, cartId);
+            getQuantityStmt.setInt(2, productId);
+            ResultSet rs = getQuantityStmt.executeQuery();
+
+            if (rs.next()) {
+                int currentQuantity = rs.getInt("quantity");
+                if (currentQuantity > 1) {
+                    // If quantity > 1, decrease by 1
+                    String updateQuery = "UPDATE cart_item SET quantity = quantity - 1 WHERE cartId = ? AND productId = ?";
+                    PreparedStatement updateStmt = conn.prepareStatement(updateQuery);
+                    updateStmt.setInt(1, cartId);
+                    updateStmt.setInt(2, productId);
+                    updateStmt.executeUpdate();
+                } else {
+                    // If quantity is 1, remove the item
+                    removeItemFromCart(cartId, productId);
+                }
+            }
+        } catch (SQLException err) {
             System.out.println(err.getMessage());
         }
     }
