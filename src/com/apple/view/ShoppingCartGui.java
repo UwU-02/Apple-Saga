@@ -246,8 +246,15 @@ public class ShoppingCartGui {
     }
     
     private void refreshCart() {
-        productPanel.removeAll();
+    	productPanel.removeAll();
         displayCartItems();
+        
+        // Update the shoppingCart object
+        ShoppingCartController cartController = new ShoppingCartController();
+        int customerId = UserSession.getInstance().getCurrentUserId();
+        int cartId = cartController.getCartIdbyCustomerId(customerId);
+        this.shoppingCart.setCartItems(cartController.getAllCartItembyCartId(cartId));
+        
         productPanel.revalidate();
         productPanel.repaint();
     }
