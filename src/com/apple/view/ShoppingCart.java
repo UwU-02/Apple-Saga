@@ -25,7 +25,6 @@ public class ShoppingCart {
     private String email;
     private String password;
     private double total = 0.0;
-    private double sst = 0.0;
     private JLabel TotalPrice;
 
     public ShoppingCart(String email, String password) {
