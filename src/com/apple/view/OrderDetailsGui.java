@@ -67,7 +67,7 @@ public class OrderDetailsGui extends JFrame {
 
         // Order Details Panel
         JPanel orderDetailsPanel = new JPanel(new GridLayout(0, 2, 10, 5));
-        orderDetailsPanel.setBorder(BorderFactory.createTitledBorder("Order Details"));
+        orderDetailsPanel.setBorder(BorderFactory.createTitledBorder("ORDER DETAILS"));
         orderDetailsPanel.add(new JLabel("Order ID:"));
         orderDetailsPanel.add(new JLabel(String.valueOf(shoppingOrder.getOrderId())));
         orderDetailsPanel.add(new JLabel("Customer Name:"));
@@ -83,7 +83,7 @@ public class OrderDetailsGui extends JFrame {
         // Order Items Panel
         JPanel itemsPanel = new JPanel();
         itemsPanel.setLayout(new BoxLayout(itemsPanel, BoxLayout.Y_AXIS));
-        itemsPanel.setBorder(BorderFactory.createTitledBorder("Order Items"));
+        itemsPanel.setBorder(BorderFactory.createTitledBorder("ORDER ITEMS"));
         
         for (CartItem item : shoppingOrder.getCartItems()) {
             JPanel itemPanel = new JPanel(new BorderLayout(10, 5));
