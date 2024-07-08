@@ -1,14 +1,25 @@
 package view;
 
 import java.awt.EventQueue;
-import javax.imageio.ImageIO;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
 import controller.ProductController;
 import controller.ReviewController;
 import controller.ShoppingCartController;
@@ -16,17 +27,7 @@ import model.Product;
 import model.Review;
 import model.ShoppingCart;
 import model.UserSession;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.Font;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
+import view.ShoppingCartGui;
 
 public class ProductDetailGui extends JFrame {
 
@@ -162,6 +163,21 @@ public class ProductDetailGui extends JFrame {
         btnBuyNow.setFont(new Font("Tahoma", Font.PLAIN, 16));
         btnBuyNow.setBounds(616, 288, 145, 34);
         contentPane.add(btnBuyNow);
+        btnBuyNow.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int customerId = UserSession.getInstance().getCurrentUserId();
+                ShoppingCartController cartController = new ShoppingCartController();
+                model.ShoppingCart cart = cartController.getShoppingCartDetailbyCustomerId(customerId);
+                
+                // Add the product to the cart
+                cartController.addItemToCart(cart.getCartId(), product.getProductId());
+                
+                // Navigate to the shopping cart page
+                dispose(); // Close the current product detail page
+                ShoppingCartGui shoppingCartView = new ShoppingCartGui(customerEmail, customerPassword);
+                shoppingCartView.setVisible(true);
+            }
+        });
 
         List<Review> reviews = fetchProductReviews(product.getProductId());
         displayProductReviews(reviews);
