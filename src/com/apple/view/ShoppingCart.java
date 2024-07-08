@@ -88,7 +88,7 @@ public class ShoppingCart {
         scrollPane.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
         frame.getContentPane().add(scrollPane);
 
-        JLabel lblTotalSstIncluded = new JLabel("Total(6% sst included) :");
+        JLabel lblTotalSstIncluded = new JLabel("Total Price :");
         lblTotalSstIncluded.setFont(new Font("Microsoft New Tai Lue", Font.BOLD, 12));
         lblTotalSstIncluded.setBounds(510, 470, 167, 13);
         frame.getContentPane().add(lblTotalSstIncluded);
@@ -111,6 +111,7 @@ public class ShoppingCart {
             for (CartItem cartItem : cartItems) {
             	Product product = cartItem.getCartItemProduct();
                 int quantity = cartItem.getCartItemQuantity();
+                
                 String imageUrl = "/com/apple/resources/product_images/" + product.getProductImageURL();
                 URL url = getClass().getResource(imageUrl);
 
@@ -157,20 +158,27 @@ public class ShoppingCart {
                 quantityLabel.setFont(new Font("Microsoft New Tai Lue", Font.PLAIN, 12));
                 quantityLabel.setBounds(160, 40, 100, 20);
                 itemPanel.add(quantityLabel);
+                
+                double productPrice = product.getProductPrice();
+                double subtotal = productPrice * quantity;
 
-                JLabel productPrice = new JLabel(String.format("RM %.2f", product.getProductPrice()));
-                productPrice.setFont(new Font("Microsoft New Tai Lue", Font.PLAIN, 12));
-                productPrice.setBounds(560, 80, 100, 20);
-                itemPanel.add(productPrice);
+                JLabel productPriceLabel = new JLabel(String.format("Price: RM %.2f", productPrice));
+                productPriceLabel.setFont(new Font("Microsoft New Tai Lue", Font.PLAIN, 12));
+                productPriceLabel.setBounds(160, 60, 150, 20);
+                itemPanel.add(productPriceLabel);
+
+                JLabel subtotalLabel = new JLabel(String.format("Sub-total Price: RM %.2f", subtotal));
+                subtotalLabel.setFont(new Font("Microsoft New Tai Lue", Font.BOLD, 12));
+                subtotalLabel.setBounds(480, 40, 180, 20);
+                itemPanel.add(subtotalLabel);
 
                 productPanel.add(itemPanel);
                 productPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-                total += product.getProductPrice() * cartItem.getCartItemQuantity(); // Add the product price to the total
-            }
+                total += subtotal;
+                }
 
-            sst = total * 0.06; // Calculate SST (6%)
-            TotalPrice.setText(String.format("RM %.2f", total + sst));
+                TotalPrice.setText(String.format("RM %.2f", total ));
             
             
         } else {
