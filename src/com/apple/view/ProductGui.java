@@ -1,9 +1,9 @@
-package com.apple.view;
+package view;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import com.apple.controller.ProductController;
-import com.apple.model.Product;
+import controller.ProductController;
+import model.Product;
 import java.util.List;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -54,7 +54,7 @@ public class ProductGui extends JFrame {
 
         JLabel lblProduct = new JLabel("PRODUCTS");
         lblProduct.setHorizontalAlignment(SwingConstants.LEFT);
-        lblProduct.setFont(new Font("Serif", Font.PLAIN, 20));
+        lblProduct.setFont(new Font("Tahoma", Font.BOLD, 20));
         lblProduct.setBounds(71, 79, 254, 45);
         frame.getContentPane().add(lblProduct);
 
