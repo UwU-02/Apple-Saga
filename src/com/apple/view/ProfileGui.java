@@ -148,7 +148,7 @@ public class ProfileGui extends JFrame {
 		            }
 		        }
 		        
-		        view.ShoppingCart frame = new view.ShoppingCart(email, password);
+		        view.ShoppingCartGui frame = new view.ShoppingCartGui(email, password, cart, null);
 		        frame.setVisible(true);
 		    }
 		});
