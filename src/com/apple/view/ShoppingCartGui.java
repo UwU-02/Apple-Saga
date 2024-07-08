@@ -2,9 +2,13 @@ package view;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
+import controller.CustomerController;
 import controller.ShoppingCartController;
 import model.CartItem;
+import model.Customer;
 import model.Product;
+import model.ShoppingCart;
 import model.UserSession;
 
 import java.awt.Color;
@@ -27,10 +31,18 @@ public class ShoppingCartGui {
     private String password;
     private double total = 0.0;
     private JLabel TotalPrice;
+    private ShoppingCart shoppingCart;
+    private Customer customer;
 
-    public ShoppingCartGui(String email, String password) {
+    public ShoppingCartGui(String email, String password, ShoppingCart shoppingCart, Customer customer) {
     	this.email = email;
         this.password = password;
+        this.shoppingCart = shoppingCart;
+        CustomerController customerController = new CustomerController();
+        int customerId = UserSession.getInstance().getCurrentUserId();
+        this.customer = customerController.getCustomerDetailsById(customerId);
+
+        
         productPanel = new JPanel();
         productPanel.setLayout(new BoxLayout(productPanel, BoxLayout.Y_AXIS));
         
@@ -44,7 +56,7 @@ public class ShoppingCartGui {
         storeName.setBounds(85, 37, 239, 45);
         frame.getContentPane().add(storeName);
 
-        JButton backBttn = new JButton("BACK");
+        JButton backBttn = new JButton("Back");
         backBttn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
@@ -56,16 +68,7 @@ public class ShoppingCartGui {
         backBttn.setBounds(85, 92, 85, 21);
         frame.getContentPane().add(backBttn);
 
-        JButton checkoutBttn = new JButton("Checkout");
-        checkoutBttn.setFont(new Font("Times New Roman", Font.BOLD, 15));
-        checkoutBttn.setBounds(740, 510, 117, 43);
-        frame.getContentPane().add(checkoutBttn);
-        checkoutBttn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose();
-                new CheckoutGui();
-            }
-        });
+        
 
         JLabel shoppingCartLabel = new JLabel("Shopping Cart");
         shoppingCartLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -81,6 +84,25 @@ public class ShoppingCartGui {
         // Fetch and display the cart items
         displayCartItems();
 
+        JButton checkoutButton = new JButton("Checkout");
+        checkoutButton.setBounds(720, 487, 117, 43);  // Set the position and size
+     // Hide the checkout button if the shopping cart is empty
+        if (total > 0) {
+            frame.getContentPane().add(checkoutButton);
+            checkoutButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    frame.setVisible(false);
+                    CustomerController customerController = new CustomerController();
+                    int customerId = UserSession.getInstance().getCurrentUserId();
+                    Customer updatedCustomer = customerController.getCustomerDetailsById(customerId);
+                    CheckoutGui checkoutFrame = new CheckoutGui(email, password, shoppingCart, updatedCustomer, total);
+                    checkoutFrame.setVisible(true);
+                }
+            });
+        } else {
+            checkoutButton.setVisible(false);
+        }
+        
         JScrollPane scrollPane = new JScrollPane(productPanel);
         scrollPane.setBounds(85, 162, 715, 300);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -105,8 +127,10 @@ public class ShoppingCartGui {
         
         System.out.println("Displaying items for cart ID " + cartId + ": " + cartItems);
 
+        total = 0.0;
+        
         if (cartItems != null && !cartItems.isEmpty()) {
-            total = 0.0;
+            
             
             for (CartItem cartItem : cartItems) {
             	Product product = cartItem.getCartItemProduct();
@@ -229,8 +253,9 @@ public class ShoppingCartGui {
     }
 
     public static void main(String[] args) {
-    	 new ShoppingCartGui("example@email.com", "password");  // Create and show the frame
-    }
+    	ShoppingCart shoppingCart = new ShoppingCart(); // Initialize with actual cart items
+        Customer customer = new Customer("John Doe", "0123456789", "123 Example St", "john.doe@example.com", "password");
+        new ShoppingCartGui("example@email.com", "password", shoppingCart, customer);    }
 
     public void setVisible(boolean b) {
         frame.setVisible(b);
