@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -118,5 +118,70 @@ public class ShoppingOrderController extends Controller {
             e.printStackTrace();
         }
         return orderSummaries;
+    }
+    
+    public ShoppingOrder getCompleteOrderDetails(int orderId) {
+        ShoppingOrder order = new ShoppingOrder();
+        order.setOrderId(orderId);
+        
+        try {
+            // Fetch order details
+            String orderQuery = "SELECT so.orderId, c.customerName, c.customerAddress, c.customerContact, d.deliveryStatus " +
+                                "FROM SHOPPING_ORDER so " +
+                                "JOIN CUSTOMER c ON so.customerId = c.customerId " +
+                                "JOIN DELIVERY d ON so.orderId = d.orderId " +
+                                "WHERE so.orderId = ?";
+            PreparedStatement orderPs = conn.prepareStatement(orderQuery);
+            orderPs.setInt(1, orderId);
+            ResultSet orderRs = orderPs.executeQuery();
+            
+            if (orderRs.next()) {
+                Customer customer = new Customer();
+                customer.setCustomerName(orderRs.getString("customerName"));
+                customer.setCustomerAddress(orderRs.getString("customerAddress"));
+                customer.setCustomerContact(orderRs.getString("customerContact"));
+                order.setOrderCustomer(customer);
+                
+                // Convert String status to boolean
+                String status = orderRs.getString("deliveryStatus");
+                boolean isDelivered = "DELIVERED".equalsIgnoreCase(status);
+                order.setDeliveryStatus(isDelivered);
+            }
+            
+            // Fetch order items
+            String itemsQuery = "SELECT p.productId, p.productName, p.productPrice, p.imageURL, ol.productQuantity " +
+                                "FROM ORDER_LIST ol " +
+                                "JOIN PRODUCT p ON ol.productId = p.productId " +
+                                "WHERE ol.orderId = ?";
+            PreparedStatement itemsPs = conn.prepareStatement(itemsQuery);
+            itemsPs.setInt(1, orderId);
+            ResultSet itemsRs = itemsPs.executeQuery();
+            
+            List<CartItem> cartItems = new ArrayList<>();
+            double total = 0.0;
+            while (itemsRs.next()) {
+                Product product = new Product();
+                product.setProductId(itemsRs.getInt("productId"));
+                product.setProductName(itemsRs.getString("productName"));
+                product.setProductPrice(itemsRs.getDouble("productPrice"));
+                product.setProductImageURL(itemsRs.getString("imageURL"));
+                
+                CartItem cartItem = new CartItem();
+                cartItem.setCartItemProduct(product);
+                cartItem.setCartItemQuantity(itemsRs.getInt("productQuantity"));
+                
+                cartItems.add(cartItem);
+                
+                // Calculate total
+                total += product.getProductPrice() * cartItem.getCartItemQuantity();
+            }
+            order.setCartItems(cartItems);
+            order.setOrderTotal(total);
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return order;
     }
 }
