@@ -6,11 +6,16 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import model.Customer;
 import model.Product;
+import model.UserSession;
+import controller.CustomerController;
 import controller.ProductController;
 import controller.ReviewController;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Image;
 
@@ -34,7 +39,8 @@ public class ReviewGui extends JFrame {
 	private static int productId;
     private String customerEmail;
     private String customerPassword;
-
+    private Customer customer;
+    private CustomerController customerController;
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -64,9 +70,13 @@ public class ReviewGui extends JFrame {
 	}
 
 	
-	public ReviewGui(Product product, String customerEmail, String customerPassword) {
-		this.customerEmail = customerEmail;
-        this.customerPassword = customerPassword;
+	public ReviewGui(Product product) {
+	    this.customerController = new CustomerController();
+	    int currentUserId = UserSession.getInstance().getCurrentUserId();
+	    this.customer = customerController.getCustomerDetailsById(currentUserId);
+
+        String customerEmail = customer.getCustomerEmail();
+        String customerPassword = customer.getCustomerPassword();
         
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 960, 600);
@@ -155,11 +165,19 @@ public class ReviewGui extends JFrame {
 		
 		JButton buttonSubmit = new JButton("Submit");
 		buttonSubmit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ProductDetailGui frame = new ProductDetailGui(product, customerEmail, customerPassword,0);
-				frame.setVisible(true);
-				dispose();
-			}
+		    public void actionPerformed(ActionEvent e) {
+		        String review = textField.getText();
+		        if (!review.trim().isEmpty()) {
+		            int currentUserId = UserSession.getInstance().getCurrentUserId();
+		            ReviewController reviewController = new ReviewController();
+		            reviewController.addReview(product.getProductId(), currentUserId, review);
+		            JOptionPane.showMessageDialog(ReviewGui.this, "Review submitted successfully!");
+		            dispose();
+		            new ProductDetailGui(product, customer.getCustomerEmail(), customer.getCustomerPassword(), 0).setVisible(true);
+		        } else {
+		            JOptionPane.showMessageDialog(ReviewGui.this, "Please enter a review before submitting.");
+		        }
+		    }
 		});
 		buttonSubmit.setFont(new Font("Times New Roman", Font.PLAIN, 16));
 		buttonSubmit.setBounds(802, 479, 110, 34);
