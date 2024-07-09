@@ -1,5 +1,4 @@
-
-package com.apple.view;
+package view;
 
 import java.awt.EventQueue;
 
@@ -7,9 +6,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import com.apple.model.Product;
-import com.apple.controller.ProductController;
-import com.apple.controller.ReviewController;
+import model.Product;
+import controller.ProductController;
+import controller.ReviewController;
 
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -52,7 +51,7 @@ public class ReviewGui extends JFrame {
                     String dummyEmail = "test@example.com";
                     String dummyPassword = "testpassword";
 
-                    ProductDetailGui frame = new ProductDetailGui(sampleProduct, dummyEmail, dummyPassword);
+                    ProductDetailGui frame = new ProductDetailGui(sampleProduct, dummyEmail, dummyPassword,0);
                     frame.setVisible(true);
 					
 					//ReviewGui frame = new ReviewGui();
@@ -86,7 +85,7 @@ public class ReviewGui extends JFrame {
 		buttonBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				 new ProductDetailGui(product, customerEmail, customerPassword).setVisible(true); // Navigate to ProductDetailGui
+				 new ProductDetailGui(product, customerEmail, customerPassword,0).setVisible(true); // Navigate to ProductDetailGui
                
 			}
 		});
@@ -157,7 +156,7 @@ public class ReviewGui extends JFrame {
 		JButton buttonSubmit = new JButton("Submit");
 		buttonSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ProductDetailGui frame = new ProductDetailGui(product, customerEmail, customerPassword);
+				ProductDetailGui frame = new ProductDetailGui(product, customerEmail, customerPassword,0);
 				frame.setVisible(true);
 				dispose();
 			}
