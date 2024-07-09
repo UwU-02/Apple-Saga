@@ -20,15 +20,18 @@ public class OrderHistoryGui extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private ShoppingOrderController orderController;
+    private static OrderHistoryGui instance;
     private Customer customer;
     private static String email;
     private static String password;
+    private JPanel ordersPanel;
 
     public OrderHistoryGui(Connection conn, Customer customer, String email, String password) {
         this.orderController = new ShoppingOrderController();
         this.customer = customer;
         this.email = email;
         this.password = password;
+        
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 960, 600);
@@ -79,7 +82,12 @@ public class OrderHistoryGui extends JFrame {
         refreshOrderHistory();
     }
     
-    
+    public static OrderHistoryGui getInstance(Connection conn, Customer customer, String email, String password) {
+        if (instance == null) {
+            instance = new OrderHistoryGui(conn, customer, email, password);
+        }
+        return instance;
+    }
 
     private void displayOrderHistory(JPanel ordersPanel) {
         List<OrderSummary> orderSummaries = orderController.getOrderSummariesByCustomer(UserSession.getInstance().getCurrentUserId());
@@ -142,6 +150,12 @@ public class OrderHistoryGui extends JFrame {
         ordersPanel.repaint();
     }
     
+    public void refreshOrderHistoryPanel() {
+        displayOrderHistory(ordersPanel);
+        contentPane.revalidate();
+        contentPane.repaint();
+    }
+    
     public void refreshOrderHistory() {
         contentPane.remove(1);  // Remove the existing scroll pane
         JPanel ordersPanel = new JPanel();
@@ -159,17 +173,15 @@ public class OrderHistoryGui extends JFrame {
     }
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    Customer customer = new Customer();
-                    String email = "example@example.com";
-                    String password = "password";
-                    OrderHistoryGui frame = new OrderHistoryGui(null, customer, email, password);
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                Customer customer = new Customer();
+                String email = "example@example.com";
+                String password = "password";
+                instance = new OrderHistoryGui(null, customer, email, password);
+                instance.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
