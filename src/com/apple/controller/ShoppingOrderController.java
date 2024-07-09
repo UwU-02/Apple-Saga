@@ -5,6 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+
+import com.mysql.jdbc.Statement;
+
 import java.util.ArrayList;
 import model.ShoppingOrder;
 import model.CartItem;
@@ -118,6 +121,49 @@ public class ShoppingOrderController extends Controller {
             e.printStackTrace();
         }
         return orderSummaries;
+    }
+    
+    public int createOrderFromCart(int customerId) {
+        int orderId = -1;
+        try {
+            // Insert new order
+            String insertOrderQuery = "INSERT INTO SHOPPING_ORDER (customerId) VALUES (?)";
+            PreparedStatement orderPs = conn.prepareStatement(insertOrderQuery, Statement.RETURN_GENERATED_KEYS);
+            orderPs.setInt(1, customerId);
+            orderPs.executeUpdate();
+            
+            // Get the generated orderId
+            ResultSet rs = orderPs.getGeneratedKeys();
+            if (rs.next()) {
+                orderId = rs.getInt(1);
+            }
+
+            // Get cart items
+            ShoppingCartController cartController = new ShoppingCartController();
+            int cartId = cartController.getCartIdbyCustomerId(customerId);
+            List<CartItem> cartItems = cartController.getAllCartItembyCartId(cartId);
+
+            // Insert order items
+            String insertOrderItemQuery = "INSERT INTO ORDER_LIST (productId, orderId, productQuantity) VALUES (?, ?, ?)";
+            PreparedStatement orderItemPs = conn.prepareStatement(insertOrderItemQuery);
+            
+            for (CartItem item : cartItems) {
+                orderItemPs.setInt(1, item.getCartItemProduct().getProductId());
+                orderItemPs.setInt(2, orderId);
+                orderItemPs.setInt(3, item.getCartItemQuantity());
+                orderItemPs.executeUpdate();
+            }
+
+            // Insert into DELIVERY table
+            String insertDeliveryQuery = "INSERT INTO DELIVERY (orderId, deliveryStatus) VALUES (?, 'IN-DELIVERY')";
+            PreparedStatement deliveryPs = conn.prepareStatement(insertDeliveryQuery);
+            deliveryPs.setInt(1, orderId);
+            deliveryPs.executeUpdate();
+
+        } catch (SQLException err) {
+            System.out.println(err.getMessage());
+        }
+        return orderId;
     }
     
     public ShoppingOrder getCompleteOrderDetails(int orderId) {
