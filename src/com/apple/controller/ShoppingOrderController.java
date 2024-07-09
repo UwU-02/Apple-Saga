@@ -166,6 +166,25 @@ public class ShoppingOrderController extends Controller {
         return orderId;
     }
     
+    public void updateOrderStatus(int orderId, boolean isDelivered) {
+        try {
+            String sql = "UPDATE DELIVERY SET deliveryStatus = ? WHERE orderId = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, isDelivered ? "DELIVERED" : "IN-DELIVERY");
+            ps.setInt(2, orderId);
+            int rowsAffected = ps.executeUpdate();
+            
+            if (rowsAffected > 0) {
+                System.out.println("Order status updated successfully for orderId: " + orderId);
+            } else {
+                System.out.println("No order found with orderId: " + orderId);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error updating order status: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
     public ShoppingOrder getCompleteOrderDetails(int orderId) {
         ShoppingOrder order = new ShoppingOrder();
         order.setOrderId(orderId);
