@@ -6,6 +6,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -49,6 +50,7 @@ public class OrderDetailsGui extends JFrame {
     private int orderId;
     
     public OrderDetailsGui(int orderId) {
+    	this.orderId = orderId; 
         orderController = new ShoppingOrderController();
         orderDetailsPanel = new JPanel(new GridLayout(0, 2, 10, 5));
         
@@ -165,16 +167,16 @@ public class OrderDetailsGui extends JFrame {
             
             if (confirm == JOptionPane.YES_OPTION) {
                 updateOrderStatus(orderId);
-                refreshOrderStatus();
+                refreshOrderDetails();
+                
+                // Update OrderHistoryGui
+                OrderHistoryGui orderHistoryGui = OrderHistoryGui.getInstance();
+                orderHistoryGui.refreshOrderHistory();
+                
+                // Enable review buttons
                 enableReviewButtons();
                 
-                Connection conn = null; 
-                Customer customer = null; 
-                String email = "example@example.com";
-                String password = "password";
-                // Get the instance of OrderHistoryGui and call the refresh method
-                OrderHistoryGui orderHistoryGui = OrderHistoryGui.getInstance(conn, customer, email, password);
-                orderHistoryGui.refreshOrderHistoryPanel();
+                JOptionPane.showMessageDialog(this, "Order marked as delivered. You can now leave reviews for the products.");
             }
         });
         buttonPanel.add(btnCompleteOrder);
@@ -194,6 +196,55 @@ public class OrderDetailsGui extends JFrame {
     private void updateOrderStatus(int orderId) {
         orderController.updateOrderStatus(orderId, true);
     }
+    
+    private void refreshOrderDetails() {
+        ShoppingOrder shoppingOrder = orderController.getCompleteOrderDetails(orderId);
+
+        if (shoppingOrder == null) {
+            JOptionPane.showMessageDialog(this, "Order details not found for orderId: " + orderId, "Error", JOptionPane.ERROR_MESSAGE);
+            dispose();
+            return;
+        }
+
+        // Update the order details panel
+        for (Component component : orderDetailsPanel.getComponents()) {
+            if (component instanceof JLabel) {
+                JLabel label = (JLabel) component;
+                String labelText = label.getText();
+                if (labelText.startsWith("Delivery Status:")) {
+                    label.setText("Delivery Status: " + (shoppingOrder.isDeliveryStatus() ? "DELIVERED" : "IN-DELIVERY"));
+                    label.setForeground(shoppingOrder.isDeliveryStatus() ? Color.GREEN : Color.RED);
+                } else if (labelText.startsWith("Order ID:")) {
+                    label.setText("Order ID: " + shoppingOrder.getOrderId());
+                } else if (labelText.startsWith("Customer Name:")) {
+                    label.setText("Customer Name: " + shoppingOrder.getOrderCustomer().getCustomerName());
+                } else if (labelText.startsWith("Contact No:")) {
+                    label.setText("Contact No: " + shoppingOrder.getOrderCustomer().getCustomerContact());
+                } else if (labelText.startsWith("Delivery Address:")) {
+                    label.setText("Delivery Address: " + shoppingOrder.getOrderCustomer().getCustomerAddress());
+                }
+            }
+        }
+
+        // Update the total price
+        for (Component component : getContentPane().getComponents()) {
+            if (component instanceof JPanel) {
+                JPanel panel = (JPanel) component;
+                for (Component panelComponent : panel.getComponents()) {
+                    if (panelComponent instanceof JLabel) {
+                        JLabel label = (JLabel) panelComponent;
+                        if (label.getText().startsWith("Total Price:")) {
+                            label.setText("Total Price: RM " + String.format("%.2f", shoppingOrder.getOrderTotal()));
+                        }
+                    }
+                }
+            }
+        }
+
+        revalidate();
+        repaint();
+    }
+
 
     private void refreshOrderStatus() {
         ShoppingOrder updatedOrder = orderController.getCompleteOrderDetails(orderId);
@@ -207,7 +258,11 @@ public class OrderDetailsGui extends JFrame {
             if (comp instanceof JPanel) {
                 JPanel itemPanel = (JPanel) comp;
                 JButton reviewButton = new JButton("Review");
-                reviewButton.addActionListener(e -> openReviewDialog(getProductFromPanel(itemPanel)));
+                reviewButton.addActionListener(e -> {
+                    Product product = getProductFromPanel(itemPanel);
+                    ReviewGui reviewGui = new ReviewGui(product);
+                    reviewGui.setVisible(true);
+                });
                 itemPanel.add(reviewButton, BorderLayout.EAST);
             }
         }
