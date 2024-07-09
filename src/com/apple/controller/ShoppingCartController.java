@@ -159,4 +159,16 @@ public class ShoppingCartController extends Controller{
         }
     }
     
+    public void clearCart(int customerId) {
+        try {
+            int cartId = getCartIdbyCustomerId(customerId);
+            String query = "DELETE FROM cart_item WHERE cartId = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setInt(1, cartId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException err) {
+            System.out.println(err.getMessage());
+        }
+    }
+    
 }
