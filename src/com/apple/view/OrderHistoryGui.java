@@ -25,6 +25,10 @@ public class OrderHistoryGui extends JFrame {
     private static String email;
     private static String password;
     private JPanel ordersPanel;
+    
+    public OrderHistoryGui() {
+        this(null, null, null, null);
+    }
 
     public OrderHistoryGui(Connection conn, Customer customer, String email, String password) {
         this.orderController = new ShoppingOrderController();
@@ -82,9 +86,9 @@ public class OrderHistoryGui extends JFrame {
         refreshOrderHistory();
     }
     
-    public static OrderHistoryGui getInstance(Connection conn, Customer customer, String email, String password) {
+    public static OrderHistoryGui getInstance() {
         if (instance == null) {
-            instance = new OrderHistoryGui(conn, customer, email, password);
+            instance = new OrderHistoryGui();
         }
         return instance;
     }
@@ -93,11 +97,13 @@ public class OrderHistoryGui extends JFrame {
         List<OrderSummary> orderSummaries = orderController.getOrderSummariesByCustomer(UserSession.getInstance().getCurrentUserId());
         System.out.println(UserSession.getInstance().getCurrentUserId());
         System.out.println("Number of orders: " + orderSummaries.size());
+        
+        ordersPanel.removeAll();
 
         if (orderSummaries.isEmpty()) {
             JLabel noOrderHistoryLabel = new JLabel("You have no order history.");
             noOrderHistoryLabel.setFont(new Font("Times New Roman", Font.BOLD, 18));
-            noOrderHistoryLabel.setForeground(Color.GRAY); // Set the text color to gray
+            noOrderHistoryLabel.setForeground(Color.GRAY);
 
             ordersPanel.setLayout(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
@@ -151,25 +157,28 @@ public class OrderHistoryGui extends JFrame {
     }
     
     public void refreshOrderHistoryPanel() {
+    	ordersPanel.removeAll();
         displayOrderHistory(ordersPanel);
         contentPane.revalidate();
         contentPane.repaint();
     }
     
     public void refreshOrderHistory() {
-        contentPane.remove(1);  // Remove the existing scroll pane
-        JPanel ordersPanel = new JPanel();
-        ordersPanel.setLayout(new BoxLayout(ordersPanel, BoxLayout.Y_AXIS));
-        
-        JScrollPane scrollPane = new JScrollPane(ordersPanel);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        
-        contentPane.add(scrollPane, BorderLayout.CENTER);
-        displayOrderHistory(ordersPanel);
-        
-        contentPane.revalidate();
-        contentPane.repaint();
+        SwingUtilities.invokeLater(() -> {
+            contentPane.remove(1);  // Remove the existing scroll pane
+            JPanel ordersPanel = new JPanel();
+            ordersPanel.setLayout(new BoxLayout(ordersPanel, BoxLayout.Y_AXIS));
+            
+            JScrollPane scrollPane = new JScrollPane(ordersPanel);
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            
+            contentPane.add(scrollPane, BorderLayout.CENTER);
+            displayOrderHistory(ordersPanel);
+            
+            contentPane.revalidate();
+            contentPane.repaint();
+        });
     }
 
     public static void main(String[] args) {
