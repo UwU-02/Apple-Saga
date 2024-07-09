@@ -6,22 +6,28 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import controller.ReviewController;
 import controller.ShoppingOrderController;
 import model.CartItem;
 import model.Customer;
+import model.Product;
 import model.ShoppingOrder;
+import model.UserSession;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -32,14 +38,22 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Connection;
 
 public class OrderDetailsGui extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private ShoppingOrderController orderController;
+    private JPanel orderDetailsPanel;
+    private JPanel itemsPanel;
+    private int orderId;
     
     public OrderDetailsGui(int orderId) {
         orderController = new ShoppingOrderController();
+        orderDetailsPanel = new JPanel(new GridLayout(0, 2, 10, 5));
+        
+        itemsPanel = new JPanel();
+        itemsPanel.setLayout(new BoxLayout(itemsPanel, BoxLayout.Y_AXIS));
         
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 900, 600);
@@ -144,8 +158,24 @@ public class OrderDetailsGui extends JFrame {
         JButton btnCompleteOrder = new JButton("Complete Order");
         btnCompleteOrder.setFont(new Font("Times New Roman", Font.BOLD, 15));
         btnCompleteOrder.addActionListener(e -> {
-            dispose();
-            // new ReviewGui(null); // Uncomment and implement this to proceed to review
+            int confirm = JOptionPane.showConfirmDialog(this, 
+                "Are you sure you want to mark this order as delivered?", 
+                "Confirm Order Completion", 
+                JOptionPane.YES_NO_OPTION);
+            
+            if (confirm == JOptionPane.YES_OPTION) {
+                updateOrderStatus(orderId);
+                refreshOrderStatus();
+                enableReviewButtons();
+                
+                Connection conn = null; 
+                Customer customer = null; 
+                String email = "example@example.com";
+                String password = "password";
+                // Get the instance of OrderHistoryGui and call the refresh method
+                OrderHistoryGui orderHistoryGui = OrderHistoryGui.getInstance(conn, customer, email, password);
+                orderHistoryGui.refreshOrderHistoryPanel();
+            }
         });
         buttonPanel.add(btnCompleteOrder);
 
@@ -160,16 +190,89 @@ public class OrderDetailsGui extends JFrame {
 
         setVisible(true);
     }
+    
+    private void updateOrderStatus(int orderId) {
+        orderController.updateOrderStatus(orderId, true);
+    }
 
+    private void refreshOrderStatus() {
+        ShoppingOrder updatedOrder = orderController.getCompleteOrderDetails(orderId);
+        JLabel statusLabel = (JLabel) orderDetailsPanel.getComponent(9);
+        statusLabel.setText(updatedOrder.isDeliveryStatus() ? "DELIVERED" : "IN-DELIVERY");
+        statusLabel.setForeground(updatedOrder.isDeliveryStatus() ? Color.GREEN : Color.RED);
+    }
+
+    private void enableReviewButtons() {
+        for (Component comp : itemsPanel.getComponents()) {
+            if (comp instanceof JPanel) {
+                JPanel itemPanel = (JPanel) comp;
+                JButton reviewButton = new JButton("Review");
+                reviewButton.addActionListener(e -> openReviewDialog(getProductFromPanel(itemPanel)));
+                itemPanel.add(reviewButton, BorderLayout.EAST);
+            }
+        }
+        itemsPanel.revalidate();
+        itemsPanel.repaint();
+    }
+
+    private Product getProductFromPanel(JPanel itemPanel) {
+        JPanel detailsPanel = (JPanel)itemPanel.getComponent(1);
+        String productName = ((JLabel)detailsPanel.getComponent(0)).getText().substring(6); // Remove "Name: " prefix
+        double productPrice = Double.parseDouble(((JLabel)detailsPanel.getComponent(1)).getText().substring(9)); // Remove "Price: RM " prefix
+     
+        Product product = new Product();
+        product.setProductName(productName);
+        product.setProductPrice(productPrice);
+        
+        return product;
+    }
+    
     private ShoppingOrder getOrderDetails(int orderId) {
-        // Fetch the order details based on the order ID.
-        // This method should return a ShoppingOrder object with the details of the order.
-        // For now, this is a placeholder and should be replaced with actual database fetching logic.
+        
         ShoppingOrder shoppingOrder = new ShoppingOrder();
         shoppingOrder.setOrderId(orderId);
-        Customer customer = new Customer("Example Name", "0123456789", "123, Example Street, City", "email@example.com", "password");
+        
+        Customer customer = new Customer(
+            "Example Name", 
+            "0123456789", 
+            "123, Example Street, City", 
+            "email@example.com", 
+            "password"
+        );
+        
         shoppingOrder.setOrderCustomer(customer);
         return shoppingOrder;
+    }
+    
+    private void openReviewDialog(Product product) {
+        JDialog reviewDialog = new JDialog(this, "Review Product", true);
+        reviewDialog.setLayout(new BorderLayout());
+
+        JTextArea reviewText = new JTextArea(5, 30);
+        JButton submitReview = new JButton("Submit Review");
+
+        submitReview.addActionListener(e -> {
+            String review = reviewText.getText();
+            if (!review.trim().isEmpty()) {
+                saveReview(product, review);
+                reviewDialog.dispose();
+            } else {
+                JOptionPane.showMessageDialog(reviewDialog, "Please enter a review before submitting.");
+            }
+        });
+
+        reviewDialog.add(new JScrollPane(reviewText), BorderLayout.CENTER);
+        reviewDialog.add(submitReview, BorderLayout.SOUTH);
+
+        reviewDialog.pack();
+        reviewDialog.setLocationRelativeTo(this);
+        reviewDialog.setVisible(true);
+    }
+
+    private void saveReview(Product product, String review) {
+        ReviewController reviewController = new ReviewController();
+        reviewController.addReview(product.getProductId(), UserSession.getInstance().getCurrentUserId(), review);
+        JOptionPane.showMessageDialog(this, "Review submitted successfully!");
     }
 
     public static void main(String[] args) {
