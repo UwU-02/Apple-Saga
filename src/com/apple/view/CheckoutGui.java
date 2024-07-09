@@ -3,10 +3,13 @@ package view;
 import javax.swing.*;
 
 import controller.ShoppingCartController;
+import controller.ShoppingOrderController;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import model.CartItem;
 import model.Customer;
@@ -297,9 +300,34 @@ public class CheckoutGui extends JFrame {
             if (paymentMethod == null) {
                 JOptionPane.showMessageDialog(this, "Please select a payment method!");
             } else {
+                // Create a new order
+                ShoppingOrderController orderController = new ShoppingOrderController();
+                int customerId = UserSession.getInstance().getCurrentUserId();
+                int orderId = orderController.createOrderFromCart(customerId);
+                
+                // Insert payment information
+                try {
+                    String insertPaymentQuery = "INSERT INTO PAYMENT (paymentMethod, orderId) VALUES (?, ?)";
+                    PreparedStatement paymentPs = orderController.conn.prepareStatement(insertPaymentQuery);
+                    paymentPs.setString(1, paymentMethod);
+                    paymentPs.setInt(2, orderId);
+                    paymentPs.executeUpdate();
+                } catch (SQLException err) {
+                    System.out.println(err.getMessage());
+                }
+
+                // Clear the shopping cart
+                ShoppingCartController cartController = new ShoppingCartController();
+                cartController.clearCart(customerId);
+
                 JOptionPane.showMessageDialog(this, "Payment processed successfully via " + paymentMethod + "!");
+                
+                // Close the checkout window
                 dispose();
-                // Redirect to order confirmation or review page
+                
+                // Open the OrderHistoryGui
+                OrderHistoryGui orderHistoryGui = new OrderHistoryGui(null, customer, email, password);
+                orderHistoryGui.setVisible(true);
             }
         });
         panel.add(btnPay);
