@@ -75,7 +75,11 @@ public class OrderHistoryGui extends JFrame {
         contentPane.add(scrollPane, BorderLayout.CENTER);
 
         displayOrderHistory(ordersPanel);
+        
+        refreshOrderHistory();
     }
+    
+    
 
     private void displayOrderHistory(JPanel ordersPanel) {
         List<OrderSummary> orderSummaries = orderController.getOrderSummariesByCustomer(UserSession.getInstance().getCurrentUserId());
@@ -136,6 +140,22 @@ public class OrderHistoryGui extends JFrame {
         }
         ordersPanel.revalidate();
         ordersPanel.repaint();
+    }
+    
+    public void refreshOrderHistory() {
+        contentPane.remove(1);  // Remove the existing scroll pane
+        JPanel ordersPanel = new JPanel();
+        ordersPanel.setLayout(new BoxLayout(ordersPanel, BoxLayout.Y_AXIS));
+        
+        JScrollPane scrollPane = new JScrollPane(ordersPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        
+        contentPane.add(scrollPane, BorderLayout.CENTER);
+        displayOrderHistory(ordersPanel);
+        
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public static void main(String[] args) {
