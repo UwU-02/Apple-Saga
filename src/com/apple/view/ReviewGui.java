@@ -7,12 +7,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import com.apple.controller.CustomerController;
-import com.apple.controller.ReviewController;
-import com.apple.controller.ProductController;
-import com.apple.model.Customer;
-import com.apple.model.Product;
-import com.apple.model.UserSession;
+import Controller.CustomerController;
+import Controller.ReviewController;
+import Controller.ProductController;
+import model.Customer;
+import model.Product;
+import model.UserSession;
 
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -108,7 +108,7 @@ public class ReviewGui extends JFrame {
 		lblNewLabel_1_1.setBounds(419, 38, 252, 39);
 		contentPane.add(lblNewLabel_1_1);
 		
-		String imageUrl = "/resources/product_images/" + product1.getProductImageURL();
+		String imageUrl = "/main/productImages/" + product1.getProductImageURL();
         URL url = getClass().getResource(imageUrl);
 
         if (url == null) {
@@ -168,7 +168,7 @@ public class ReviewGui extends JFrame {
 		        if (!review.trim().isEmpty()) {
 		            int currentUserId = UserSession.getInstance().getCurrentUserId();
 		            ReviewController reviewController = new ReviewController();
-		            reviewController.addReview(product.getProductId(), currentUserId, review);
+		            reviewController.addReview(product1.getProductId(), currentUserId, review);
 		            JOptionPane.showMessageDialog(ReviewGui.this, "Review submitted successfully!");
 		            dispose();
 		            new ProductDetailGui(product, customer.getCustomerEmail(), customer.getCustomerPassword(), 0).setVisible(true);
