@@ -12,13 +12,14 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import controller.ReviewController;
-import controller.ShoppingOrderController;
-import model.CartItem;
-import model.Customer;
-import model.Product;
-import model.ShoppingOrder;
-import model.UserSession;
+import com.apple.controller.GenerateReceiptController;
+import com.apple.controller.ReviewController;
+import com.apple.controller.ShoppingOrderController;
+import com.apple.model.CartItem;
+import com.apple.model.Customer;
+import com.apple.model.Product;
+import com.apple.model.ShoppingOrder;
+import com.apple.model.UserSession;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -37,6 +38,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
@@ -106,7 +108,7 @@ public class OrderDetailsGui extends JFrame {
             itemPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
             
             // Load and display product image
-            String imageUrl = "/com/apple/resources/product_images/" + item.getCartItemProduct().getProductImageURL();
+            String imageUrl = "/resources/product_images/" + item.getCartItemProduct().getProductImageURL();
             URL url = getClass().getResource(imageUrl);
             
             if (url == null) {
@@ -181,18 +183,27 @@ public class OrderDetailsGui extends JFrame {
         });
         buttonPanel.add(btnCompleteOrder);
 
-        JButton btnReceipt = new JButton("Print Receipt");
-        btnReceipt.setFont(new Font("Times New Roman", Font.BOLD, 15));
-        btnReceipt.addActionListener(e -> {
-            // Print receipt logic here
+        JButton printReceiptButton = new JButton("Print Receipt");
+        printReceiptButton.setFont(new Font("Times New Roman", Font.BOLD, 15));
+        printReceiptButton.addActionListener(e -> {
+            GenerateReceiptController receiptGenerator = new GenerateReceiptController(shoppingOrder);
+            String filePath = "order_" + shoppingOrder.getOrderId() + "_receipt.txt";
+
+            try {
+                receiptGenerator.generateReceipt(filePath);
+                JOptionPane.showMessageDialog(this, "Receipt generated successfully at: " + filePath,
+                        "Receipt Generated", JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, "Error generating receipt: " + ex.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
-        buttonPanel.add(btnReceipt);
+
+        buttonPanel.add(printReceiptButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
-
-        setVisible(true);
-    }
     
+    } 
     private void updateOrderStatus(int orderId) {
         orderController.updateOrderStatus(orderId, true);
     }
