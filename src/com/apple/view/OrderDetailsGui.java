@@ -1,47 +1,20 @@
 package view;
-
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-
-import com.apple.controller.GenerateReceiptController;
-import com.apple.controller.ReviewController;
-import com.apple.controller.ShoppingOrderController;
-import com.apple.model.CartItem;
-import com.apple.model.Customer;
-import com.apple.model.Product;
-import com.apple.model.ShoppingOrder;
-import com.apple.model.UserSession;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import Controller.ReviewController;
+import Controller.ShoppingOrderController;
+import model.CartItem;
+import model.Customer;
+import model.Product;
+import model.ShoppingOrder;
+import model.UserSession;
+import Controller.GenerateReceiptController;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Connection;
 
 public class OrderDetailsGui extends JFrame {
 
@@ -50,15 +23,15 @@ public class OrderDetailsGui extends JFrame {
     private JPanel orderDetailsPanel;
     private JPanel itemsPanel;
     private int orderId;
-    
+
     public OrderDetailsGui(int orderId) {
-    	this.orderId = orderId; 
+        this.orderId = orderId;
         orderController = new ShoppingOrderController();
         orderDetailsPanel = new JPanel(new GridLayout(0, 2, 10, 5));
-        
+
         itemsPanel = new JPanel();
         itemsPanel.setLayout(new BoxLayout(itemsPanel, BoxLayout.Y_AXIS));
-        
+
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 900, 600);
         setLayout(new BorderLayout());
@@ -84,7 +57,6 @@ public class OrderDetailsGui extends JFrame {
         ShoppingOrder shoppingOrder = orderController.getCompleteOrderDetails(orderId);
 
         // Order Details Panel
-        JPanel orderDetailsPanel = new JPanel(new GridLayout(0, 2, 10, 5));
         orderDetailsPanel.setBorder(BorderFactory.createTitledBorder("ORDER DETAILS"));
         orderDetailsPanel.add(new JLabel("Order ID:"));
         orderDetailsPanel.add(new JLabel(String.valueOf(shoppingOrder.getOrderId())));
@@ -99,18 +71,16 @@ public class OrderDetailsGui extends JFrame {
         mainPanel.add(orderDetailsPanel, BorderLayout.NORTH);
 
         // Order Items Panel
-        JPanel itemsPanel = new JPanel();
-        itemsPanel.setLayout(new BoxLayout(itemsPanel, BoxLayout.Y_AXIS));
         itemsPanel.setBorder(BorderFactory.createTitledBorder("ORDER ITEMS"));
-        
+
         for (CartItem item : shoppingOrder.getCartItems()) {
             JPanel itemPanel = new JPanel(new BorderLayout(10, 5));
             itemPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
-            
+
             // Load and display product image
-            String imageUrl = "/resources/product_images/" + item.getCartItemProduct().getProductImageURL();
+            String imageUrl = "/main/productImages/" + item.getCartItemProduct().getProductImageURL();
             URL url = getClass().getResource(imageUrl);
-            
+
             if (url == null) {
                 String filePath = System.getProperty("user.dir") + "/src" + imageUrl;
                 File file = new File(filePath);
@@ -120,7 +90,7 @@ public class OrderDetailsGui extends JFrame {
                     System.err.println("Error converting file path to URL: " + e.getMessage());
                 }
             }
-
+            System.out.println("URL: " + url);
             ImageIcon imageIcon;
             try {
                 BufferedImage image = ImageIO.read(url);
@@ -130,16 +100,16 @@ public class OrderDetailsGui extends JFrame {
                 System.err.println("Error loading image: " + e.getMessage());
                 imageIcon = new ImageIcon("path/to/placeholder.png");
             }
-            
+
             JLabel imageLabel = new JLabel(imageIcon);
             itemPanel.add(imageLabel, BorderLayout.WEST);
-            
+
             JPanel itemDetailsPanel = new JPanel(new GridLayout(0, 1));
             itemDetailsPanel.add(new JLabel("Name: " + item.getCartItemProduct().getProductName()));
             itemDetailsPanel.add(new JLabel("Price: RM " + item.getCartItemProduct().getProductPrice()));
             itemDetailsPanel.add(new JLabel("Quantity: " + item.getCartItemQuantity()));
             itemPanel.add(itemDetailsPanel, BorderLayout.CENTER);
-            
+
             itemsPanel.add(itemPanel);
             itemsPanel.add(Box.createVerticalStrut(10));
         }
@@ -162,22 +132,22 @@ public class OrderDetailsGui extends JFrame {
         JButton btnCompleteOrder = new JButton("Complete Order");
         btnCompleteOrder.setFont(new Font("Times New Roman", Font.BOLD, 15));
         btnCompleteOrder.addActionListener(e -> {
-            int confirm = JOptionPane.showConfirmDialog(this, 
-                "Are you sure you want to mark this order as delivered?", 
-                "Confirm Order Completion", 
-                JOptionPane.YES_NO_OPTION);
-            
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Are you sure you want to mark this order as delivered?",
+                    "Confirm Order Completion",
+                    JOptionPane.YES_NO_OPTION);
+
             if (confirm == JOptionPane.YES_OPTION) {
                 updateOrderStatus(orderId);
                 refreshOrderDetails();
-                
+
                 // Update OrderHistoryGui
                 OrderHistoryGui orderHistoryGui = OrderHistoryGui.getInstance();
                 orderHistoryGui.refreshOrderHistory();
-                
+
                 // Enable review buttons
                 enableReviewButtons();
-                
+
                 JOptionPane.showMessageDialog(this, "Order marked as delivered. You can now leave reviews for the products.");
             }
         });
@@ -204,10 +174,12 @@ public class OrderDetailsGui extends JFrame {
         add(buttonPanel, BorderLayout.SOUTH);
     
     } 
+
+
     private void updateOrderStatus(int orderId) {
         orderController.updateOrderStatus(orderId, true);
     }
-    
+
     private void refreshOrderDetails() {
         ShoppingOrder shoppingOrder = orderController.getCompleteOrderDetails(orderId);
 
@@ -223,16 +195,16 @@ public class OrderDetailsGui extends JFrame {
                 JLabel label = (JLabel) component;
                 String labelText = label.getText();
                 if (labelText.startsWith("Delivery Status:")) {
-                    label.setText("Delivery Status: " + (shoppingOrder.isDeliveryStatus() ? "DELIVERED" : "IN-DELIVERY"));
-                    label.setForeground(shoppingOrder.isDeliveryStatus() ? Color.GREEN : Color.RED);
+                    label.setText("Delivery Status: " );
+                  
                 } else if (labelText.startsWith("Order ID:")) {
-                    label.setText("Order ID: " + shoppingOrder.getOrderId());
+                    label.setText("Order ID: " );
                 } else if (labelText.startsWith("Customer Name:")) {
-                    label.setText("Customer Name: " + shoppingOrder.getOrderCustomer().getCustomerName());
+                    label.setText("Customer Name: " );
                 } else if (labelText.startsWith("Contact No:")) {
-                    label.setText("Contact No: " + shoppingOrder.getOrderCustomer().getCustomerContact());
+                    label.setText("Contact No: " );
                 } else if (labelText.startsWith("Delivery Address:")) {
-                    label.setText("Delivery Address: " + shoppingOrder.getOrderCustomer().getCustomerAddress());
+                    label.setText("Delivery Address: ");
                 }
             }
         }
@@ -255,7 +227,6 @@ public class OrderDetailsGui extends JFrame {
         revalidate();
         repaint();
     }
-
 
     private void refreshOrderStatus() {
         ShoppingOrder updatedOrder = orderController.getCompleteOrderDetails(orderId);
@@ -285,31 +256,30 @@ public class OrderDetailsGui extends JFrame {
         JPanel detailsPanel = (JPanel)itemPanel.getComponent(1);
         String productName = ((JLabel)detailsPanel.getComponent(0)).getText().substring(6); // Remove "Name: " prefix
         double productPrice = Double.parseDouble(((JLabel)detailsPanel.getComponent(1)).getText().substring(9)); // Remove "Price: RM " prefix
-     
+
         Product product = new Product();
         product.setProductName(productName);
         product.setProductPrice(productPrice);
-        
+
         return product;
     }
-    
+
     private ShoppingOrder getOrderDetails(int orderId) {
-        
         ShoppingOrder shoppingOrder = new ShoppingOrder();
         shoppingOrder.setOrderId(orderId);
-        
+
         Customer customer = new Customer(
-            "Example Name", 
-            "0123456789", 
-            "123, Example Street, City", 
-            "email@example.com", 
-            "password"
+                "Example Name",
+                "0123456789",
+                "123, Example Street, City",
+                "email@example.com",
+                "password"
         );
-        
+
         shoppingOrder.setOrderCustomer(customer);
         return shoppingOrder;
     }
-    
+
     private void openReviewDialog(Product product) {
         JDialog reviewDialog = new JDialog(this, "Review Product", true);
         reviewDialog.setLayout(new BorderLayout());
