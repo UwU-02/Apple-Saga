@@ -150,6 +150,9 @@ public class OrderDetailsGui extends JFrame {
                 // Enable review buttons
                 enableReviewButtons();
 
+                // Hide btnCompleteOrder button
+                btnCompleteOrder.setVisible(false);
+
                 JOptionPane.showMessageDialog(this, "Order marked as delivered. You can now leave reviews for the products.");
             }
         });
