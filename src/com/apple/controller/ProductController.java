@@ -1,5 +1,6 @@
 package controller;
 
+
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,6 +23,31 @@ public class ProductController extends Controller {
         }
 	}
 
+    public Product getProductDetailsbyName(String productName)
+    {
+        Product product = new Product();
+        try
+        {
+            String sql = "SELECT * FROM product WHERE productName = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, productName);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                product.setProductId(rs.getInt("productId"));
+                product.setProductName(rs.getString("productName"));
+                product.setProductPrice(rs.getDouble("productPrice"));
+                product.setProductStockQuantity(rs.getInt("stockQuantity"));
+                product.setProductColor(rs.getString("productColour"));
+                product.setProductImageURL(rs.getString("imageURL"));
+                product.setProductCategory(new ProductCategoryController().getProductCategoryById(rs.getInt("categoryId")));
+            }
+        } catch (SQLException err)
+        {
+            System.out.println(err.getMessage());
+        }
+        return product;
+    }
 	// get 1 product by id
     public Product getProductDetailsbyId(int productId)
     {
