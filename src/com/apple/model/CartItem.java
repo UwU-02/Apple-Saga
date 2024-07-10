@@ -2,17 +2,17 @@ package com.apple.model;
 
 public class CartItem {
     private int quantity;
-    private Product product;
+    private static Product product;
 
     public CartItem(int quantity, Product product) {
         this.quantity = quantity;
-        this.product = product;
+        CartItem.product = product;
     }
 
     public CartItem()
     {
         this.quantity = 0;
-        this.product = null;
+        CartItem.product = null;
     }
 
     public int getCartItemQuantity() {
@@ -24,12 +24,12 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-    public Product getCartItemProduct() {
+    public static Product getCartItemProduct() {
         return product;
     }
 
     public void setCartItemProduct(Product product) 
     {
-        this.product = product;
+        CartItem.product = product;
     }
 }
