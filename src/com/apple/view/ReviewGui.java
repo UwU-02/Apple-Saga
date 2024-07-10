@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.apple.controller.CustomerController;
 import com.apple.controller.ReviewController;
+import com.apple.controller.ProductController;
 import com.apple.model.Customer;
 import com.apple.model.Product;
 import com.apple.model.UserSession;
@@ -36,6 +37,8 @@ public class ReviewGui extends JFrame {
 	private JTextField textField;
     private Customer customer;
     private CustomerController customerController;
+    private Product product1;
+    private ProductController productController;
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -69,6 +72,8 @@ public class ReviewGui extends JFrame {
 	    this.customerController = new CustomerController();
 	    int currentUserId = UserSession.getInstance().getCurrentUserId();
 	    this.customer = customerController.getCustomerDetailsById(currentUserId);
+	    this.productController = new ProductController();
+            this.product1 = productController.getProductDetailsbyName(product.getProductName());
 
         String customerEmail = customer.getCustomerEmail();
         String customerPassword = customer.getCustomerPassword();
@@ -103,7 +108,7 @@ public class ReviewGui extends JFrame {
 		lblNewLabel_1_1.setBounds(419, 38, 252, 39);
 		contentPane.add(lblNewLabel_1_1);
 		
-		String imageUrl = "/resources/product_images/" + product.getProductImageURL();
+		String imageUrl = "/resources/product_images/" + product1.getProductImageURL();
         URL url = getClass().getResource(imageUrl);
 
         if (url == null) {
