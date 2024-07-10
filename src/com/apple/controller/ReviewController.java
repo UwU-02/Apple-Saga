@@ -49,7 +49,7 @@ public class ReviewController extends Controller {
 	
 	public void addReview(int productId, int customerId, String reviewDescription) {
         try {
-            String query = "INSERT INTO review (productId, customerId, reviewDescription) VALUES (?, ?, ?);";
+            String query = "INSERT INTO review (productId, customerId, reviewDescription) VALUES (?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, productId);
             ps.setInt(2, customerId);
