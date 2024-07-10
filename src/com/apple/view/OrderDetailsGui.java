@@ -1,4 +1,5 @@
 package view;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import Controller.ReviewController;
@@ -58,16 +59,17 @@ public class OrderDetailsGui extends JFrame {
 
         // Order Details Panel
         orderDetailsPanel.setBorder(BorderFactory.createTitledBorder("ORDER DETAILS"));
-        orderDetailsPanel.add(new JLabel("Order ID:"));
-        orderDetailsPanel.add(new JLabel(String.valueOf(shoppingOrder.getOrderId())));
-        orderDetailsPanel.add(new JLabel("Customer Name:"));
-        orderDetailsPanel.add(new JLabel(shoppingOrder.getOrderCustomer().getCustomerName()));
-        orderDetailsPanel.add(new JLabel("Contact No:"));
-        orderDetailsPanel.add(new JLabel(shoppingOrder.getOrderCustomer().getCustomerContact()));
-        orderDetailsPanel.add(new JLabel("Delivery Address:"));
-        orderDetailsPanel.add(new JLabel(shoppingOrder.getOrderCustomer().getCustomerAddress()));
-        orderDetailsPanel.add(new JLabel("Delivery Status:"));
-        orderDetailsPanel.add(new JLabel(shoppingOrder.isDeliveryStatus() ? "DELIVERED" : "IN-DELIVERY"));
+        orderDetailsPanel.add(new JLabel("Order ID:"+String.valueOf(shoppingOrder.getOrderId())));
+   //  orderDetailsPanel.add(new JLabel(String.valueOf(shoppingOrder.getOrderId())));
+        orderDetailsPanel.add(new JLabel("Customer Name:"+shoppingOrder.getOrderCustomer().getCustomerName()));
+    //  orderDetailsPanel.add(new JLabel(shoppingOrder.getOrderCustomer().getCustomerName()));
+        orderDetailsPanel.add(new JLabel("Contact No:"+shoppingOrder.getOrderCustomer().getCustomerContact()));
+     // orderDetailsPanel.add(new JLabel(shoppingOrder.getOrderCustomer().getCustomerContact()));
+        orderDetailsPanel.add(new JLabel("Delivery Address:"+shoppingOrder.getOrderCustomer().getCustomerAddress()));
+   //orderDetailsPanel.add(new JLabel(shoppingOrder.getOrderCustomer().getCustomerAddress()));
+        orderDetailsPanel.add(new JLabel("Delivery Status: " + (shoppingOrder.isDeliveryStatus() ? "DELIVERED" : "IN-DELIVERY")));
+
+   //orderDetailsPanel.add(new JLabel(shoppingOrder.isDeliveryStatus() ? "DELIVERED" : "IN-DELIVERY"));
         mainPanel.add(orderDetailsPanel, BorderLayout.NORTH);
 
         // Order Items Panel
@@ -195,16 +197,16 @@ public class OrderDetailsGui extends JFrame {
                 JLabel label = (JLabel) component;
                 String labelText = label.getText();
                 if (labelText.startsWith("Delivery Status:")) {
-                    label.setText("Delivery Status: " );
-                  
+                    label.setText("Delivery Status:" + (shoppingOrder.isDeliveryStatus() ? "DELIVERED" : "IN-DELIVERY"));
+                    label.setForeground(shoppingOrder.isDeliveryStatus() ? Color.GREEN : Color.RED);
                 } else if (labelText.startsWith("Order ID:")) {
-                    label.setText("Order ID: " );
+                    label.setText("Order ID:" + shoppingOrder.getOrderId());
                 } else if (labelText.startsWith("Customer Name:")) {
-                    label.setText("Customer Name: " );
+                    label.setText("Customer Name: " + shoppingOrder.getOrderCustomer().getCustomerName());
                 } else if (labelText.startsWith("Contact No:")) {
-                    label.setText("Contact No: " );
+                    label.setText("Contact No: " + shoppingOrder.getOrderCustomer().getCustomerContact());
                 } else if (labelText.startsWith("Delivery Address:")) {
-                    label.setText("Delivery Address: ");
+                    label.setText("Delivery Address: " + shoppingOrder.getOrderCustomer().getCustomerAddress());
                 }
             }
         }
