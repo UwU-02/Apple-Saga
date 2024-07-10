@@ -1,5 +1,4 @@
 package com.apple.view;
-
 import java.awt.EventQueue;
 import java.awt.Image;
 
@@ -171,7 +170,7 @@ public class ReviewGui extends JFrame {
 		            reviewController.addReview(product1.getProductId(), currentUserId, review);
 		            JOptionPane.showMessageDialog(ReviewGui.this, "Review submitted successfully!");
 		            dispose();
-		            new ProductDetailGui(product, customer.getCustomerEmail(), customer.getCustomerPassword(), 0).setVisible(true);
+		            new ProductDetailGui(product1, customer.getCustomerEmail(), customer.getCustomerPassword(), 0).setVisible(true);
 		        } else {
 		            JOptionPane.showMessageDialog(ReviewGui.this, "Please enter a review before submitting.");
 		        }
