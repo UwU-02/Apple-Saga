@@ -1,28 +1,26 @@
-package view;
+package com.apple.view;
 
 import java.awt.EventQueue;
+import java.awt.Image;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import model.Customer;
-import model.Product;
-import model.UserSession;
-import controller.CustomerController;
-import controller.ProductController;
-import controller.ReviewController;
+import com.apple.controller.CustomerController;
+import com.apple.controller.ReviewController;
+import com.apple.model.Customer;
+import com.apple.model.Product;
+import com.apple.model.UserSession;
 
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
 import java.awt.Font;
-import java.awt.Image;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.JOptionPane;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -36,9 +34,6 @@ public class ReviewGui extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textField;
-	private static int productId;
-    private String customerEmail;
-    private String customerPassword;
     private Customer customer;
     private CustomerController customerController;
 	
@@ -108,8 +103,7 @@ public class ReviewGui extends JFrame {
 		lblNewLabel_1_1.setBounds(419, 38, 252, 39);
 		contentPane.add(lblNewLabel_1_1);
 		
-		
-		String imageUrl = "/resource/product_images/" + product.getProductImageURL();
+		String imageUrl = "/resources/product_images/" + product.getProductImageURL();
         URL url = getClass().getResource(imageUrl);
 
         if (url == null) {
@@ -137,7 +131,6 @@ public class ReviewGui extends JFrame {
         JButton productImage1 = new JButton(imageIcon);
         productImage1.setBounds(78, 141, 252, 153);
         contentPane.add(productImage1);
-		
 		JLabel lblNewLabel_2 = new JLabel(product.getProductName());
 		lblNewLabel_2.setFont(new Font("Segoe UI", Font.BOLD, 14));
 		lblNewLabel_2.setBounds(393, 152, 137, 22);
