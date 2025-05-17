@@ -36,5 +36,8 @@ A desktop-based online store simulation built using Java and MySQL.
 
 ## Notes
 - Make sure your MySQL server is running before launching the app.
+
+## Demo & Presentation
+https://youtu.be/R9dDHiv8JAw?si=cIeFuL6B2ewu2YvX
   
 BITP 3113 - UTeM
