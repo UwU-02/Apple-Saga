@@ -8,6 +8,8 @@ A desktop-based online store simulation built using Java and MySQL.
 - Menu browsing and ordering
 - Order tracking
 - Automatic receipt generation and saving
+- Customer comment
+- Exception Handling
 
 ## Technologies Used
 - Java (OOP)
